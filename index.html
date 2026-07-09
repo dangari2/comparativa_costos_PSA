@@ -32,11 +32,17 @@
       background: #94a3b8;
     }
 
-    /* Ocultar flechas de inputs numéricos en algunos navegadores */
+    /* Ocultar flechas de inputs numéricos en todos los navegadores */
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button {
       -webkit-appearance: none;
       margin: 0;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+      /* Oculta las flechas en Firefox */
     }
 
     /* Estructuración Crítica para Impresión (Exportar PDF) */
@@ -2174,6 +2180,7 @@
       const item = selectedProductsState.find(s => s.id === id);
       if (item && qty >= 1) {
         item.quantity = qty;
+        renderProductSelectorList();
         triggerRecalculation();
       }
     }
