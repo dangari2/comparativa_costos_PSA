@@ -241,7 +241,7 @@
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Cant. Dispensadores Actuales</label>
-                <input type="number" id="input-energy-qty-trad" min="1" value="60" oninput="triggerRecalculation()"
+                <input type="number" id="input-energy-qty-trad" min="1" value="1" oninput="triggerRecalculation()"
                   class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all">
               </div>
               <div>
@@ -897,9 +897,14 @@
   <script>
     // --- DATABASE MOCK (LOCALSTORAGE) ---
     const DEFAULT_PRODUCTS = [
-      { id: "prod_001", name: "Purificador PSA Basic", details: "Purificador de agua sobre mesada, ideal para el hogar y oficinas medianas.", image: "", basePrice: 8500, performance: 36000, usefulLife: 10, warranty: "5 años", maintenanceCost: 1200, maintenanceFrequency: 12, installationCost: 500, renewalCost: 3000, renewalFrequency: 36, createdAt: new Date().toISOString() },
-      { id: "prod_002", name: "Purificador PSA Professional", details: "Dispensador de pie frío/calor con filtración avanzada de alto rendimiento continuo.", image: "", basePrice: 12500, performance: 72000, usefulLife: 12, warranty: "7 años", maintenanceCost: 1800, maintenanceFrequency: 12, installationCost: 800, renewalCost: 5000, renewalFrequency: 36, createdAt: new Date().toISOString() },
-      { id: "prod_003", name: "Purificador PSA Premium", details: "Dispensador premium de pie con control electrónico de temperatura, gran caudal.", image: "", basePrice: 18000, performance: 108000, usefulLife: 15, warranty: "10 años", maintenanceCost: 2500, maintenanceFrequency: 12, installationCost: 1200, renewalCost: 7000, renewalFrequency: 36, createdAt: new Date().toISOString() },
+      { id: "prod_001", name: "Dispenser PSA Eco-D Empresarialc", details: "Dispensador Inteligente de pie frío/caliente con purificación avanzada de alto rendimiento y flujo continuo.", image: "", basePrice: 12550, performance: 80000, usefulLife: 10, warranty: "2 años", maintenanceCost: 604, maintenanceFrequency: 12, installationCost: 610, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString() },
+      { id: "prod_002", name: "Purificador PSA S1000-2 SM", details: "Purificador de agua sobre mesada de alto rendimiento. Sin costo de instalación", image: "", basePrice: 4800, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString() },
+      { id: "prod_003", name: "Purificador PSA S1000-2 + grifería BM", details: "Purificador de agua bajo mesada de alto rendimiento. Con grifería bajo mesada", image: "", basePrice: 5581, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 610, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString() },
+      { id: "prod_004", name: "Purificador PSA SENIOR 4 SM", details: "Purificador de agua sobre mesada, 36000 litros de rendimiento", image: "", basePrice: 4150, performance: 36000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 3725, renewalFrequency: 36, createdAt: new Date().toISOString() },
+      { id: "prod_005", name: "Purificador PSA SENIOR BIANCO SM", details: "Purificador de agua sobre mesada de alto rendimiento. 36000 litros", image: "", basePrice: 3295, performance: 36000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 2960, renewalFrequency: 36, createdAt: new Date().toISOString() },
+      { id: "prod_006", name: "Purificador de AIRE", details: "Alta eficiencia gracias a las 4 etapas de purificación.", image: "", basePrice: 8655, performance: 100, usefulLife: 3, warranty: "24 meses", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 635, renewalFrequency: 12, createdAt: new Date().toISOString() },
+      { id: "prod_007", name: "Purificador de Ducha PSA", details: "Agua sin cloro, trihalometanos y metales pesados para el baño. Instalación sin Costo.", image: "", basePrice: 1515, performance: 150000, usefulLife: 3, warranty: "12 meses", maintenanceCost: 0, maintenanceFrequency: 6, installationCost: 0, renewalCost: 586, renewalFrequency: 6, createdAt: new Date().toISOString() }
+
     ];
 
     const DEFAULT_COMPANY = { name: "PSA Bolivia S.R.L.", address: "Av. San Martin - Edif. Manzana 40\nSanta Cruz de la Sierra, Bolivia", phone: "+591 75371354", email: "contacto@psabolivia.com" };
