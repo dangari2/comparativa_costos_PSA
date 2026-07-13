@@ -681,7 +681,7 @@
                     (Opcional)</label>
                   <input id="form-product-image" type="text"
                     class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                    placeholder="Ej: ./fotos/equipo1.jpg">
+                    placeholder="Ej: ./FOTOS/equipo1.jpg">
                 </div>
 
                 <!-- NUEVO CAMPO: Detalle Técnico Comercial -->
@@ -931,7 +931,7 @@
       company: JSON.parse(localStorage.getItem('psa_company')) || DEFAULT_COMPANY,
       advisor: JSON.parse(localStorage.getItem('psa_advisor')) || DEFAULT_ADVISOR,
       iva: JSON.parse(localStorage.getItem('psa_iva')) || DEFAULT_IVA,
-      logo: localStorage.getItem('psa_logo') || null
+      logo: localStorage.getItem('psa_logo') || './FOTOS/logo_PSA.png'
     };
 
     // Estructura de selección del simulador:
@@ -2523,10 +2523,10 @@
     }
 
     function deleteLogo() {
-      db.logo = null;
+      db.logo = './FOTOS/logo_PSA.png';
       localStorage.removeItem('psa_logo');
       syncDataToUI();
-      showToast("Logotipo eliminado.");
+      showToast("Logotipo personalizado eliminado. Usando logo por defecto.");
     }
 
     function syncAdminFormFields() {
@@ -2547,7 +2547,7 @@
       const logoContainers = [document.getElementById('header-logo-container'), document.getElementById('print-logo')];
       logoContainers.forEach(container => {
         if (db.logo) {
-          container.innerHTML = `<img src="${db.logo}" alt="Logo" class="w-full h-full object-contain bg-white">`;
+          container.innerHTML = `<img src="${db.logo}" alt="Logo" class="w-full h-full object-contain bg-white" onerror="this.parentElement.innerHTML='PSA'">`;
         } else {
           container.innerHTML = "PSA";
           container.className = "h-8 w-8 bg-blue-600 rounded flex items-center justify-center font-bold text-white overflow-hidden";
@@ -2567,12 +2567,11 @@
 
       const previewBox = document.getElementById('logo-preview-box');
       const imgPreview = document.getElementById('img-logo-preview');
-      if (db.logo) {
-        previewBox.classList.remove('hidden');
-        imgPreview.src = db.logo;
-      } else {
-        previewBox.classList.add('hidden');
-      }
+      const isCustomLogo = !!localStorage.getItem('psa_logo');
+      previewBox.classList.remove('hidden');
+      imgPreview.src = db.logo;
+      previewBox.querySelector('p.font-bold').innerText = isCustomLogo ? 'Logotipo Personalizado' : 'Logo por Defecto (./FOTOS/logo_PSA.png)';
+      previewBox.querySelector('button').style.display = isCustomLogo ? '' : 'none';
     }
 
     // --- INITIALIZATION ---
