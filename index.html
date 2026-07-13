@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulador de Costos PSA - V7 Plan de Implementación</title>
+  <title>Proyección de ahorros - Simulador de Costos PSA</title>
   <!-- Tailwind CSS para Estilos Modernos -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js para Gráficos Dinámicos de Alta Fidelidad -->
@@ -72,11 +72,19 @@
         break-inside: avoid !important;
       }
 
-      /* Forzar renderizado de fondos de color en navegadores */
+      /* Fix: forzar fuentes del sistema para evitar error invalidfont en PostScript/PDF */
       * {
+        font-family: Arial, Helvetica, sans-serif !important;
+      }
+
+      /* Forzar colores del banner Gran Total en impresión */
+      #total-savings-banner-area>div {
+        background: linear-gradient(to right, #059669, #0f766e) !important;
+        color: white !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
+
     }
   </style>
 </head>
@@ -113,7 +121,7 @@
           class="h-9 w-9 bg-blue-600 rounded flex items-center justify-center font-bold text-white overflow-hidden">
           PSA
         </div>
-        <h1 class="font-black text-lg md:text-xl tracking-tight">Simulador de Costos PSA</h1>
+        <h1 class="font-black text-lg md:text-xl tracking-tight">Proyección de Ahorros - PSA</h1>
       </div>
       <nav class="flex items-center gap-2 md:gap-4">
         <button id="btn-view-simulator" onclick="switchView('simulator')"
@@ -500,13 +508,13 @@
               <table class="w-full text-xs md:text-sm text-left">
                 <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-300">
                   <tr>
-                    <th class="p-3 text-center" title="Incluir en el Plan de Implementación">Plan Imp.</th>
+                    <th class="p-3 text-center w-12" title="Incluir en el Plan de Implementación">Plan Imp.</th>
                     <th class="p-3 text-center">Solución</th>
                     <th class="p-3">Detalle Técnico</th>
-                    <th class="p-3 text-center">Cant.</th>
-                    <th class="p-3 text-right">P/U</th>
-                    <th class="p-3 text-right">Instal.</th>
-                    <th class="p-3 text-right">Total Parcial</th>
+                    <th class="p-3 text-center w-14">Cant.</th>
+                    <th class="p-3 text-right w-28">P/U</th>
+                    <th class="p-3 text-right w-24">Instal.</th>
+                    <th class="p-3 text-right w-28">Total Parcial</th>
                   </tr>
                 </thead>
                 <tbody id="proforma-table-body" class="divide-y divide-slate-100">
@@ -896,20 +904,19 @@
 
   <script>
     // --- DATABASE MOCK (LOCALSTORAGE) ---
-       const DEFAULT_PRODUCTS = [
-      { id: "prod_001", name: "Dispenser PSA Eco-D Empresarial", details: "Dispensador Inteligente de pie frío/caliente con purificación avanzada de alto rendimiento y flujo continuo.", image: "./FOTOS/PSA-Eco-D_Pie.png", basePrice: 12550, performance: 80000, usefulLife: 10, warranty: "2 años", maintenanceCost: 604, maintenanceFrequency: 12, installationCost: 610, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString() },
+    const DEFAULT_PRODUCTS = [
+      { id: "prod_001", name: "Dispenser PSA Eco-D Empresarial", details: "Agua pura fría/caliente, purificación avanzada de alto rendimiento y flujo continuo.", image: "./FOTOS/PSA-Eco-D_Pie.png", basePrice: 12550, performance: 80000, usefulLife: 10, warranty: "2 años", maintenanceCost: 604, maintenanceFrequency: 12, installationCost: 610, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString() },
       { id: "prod_002", name: "Purificador PSA S1000-2 SM", details: "Purificador de agua sobre mesada de alto rendimiento. Sin costo de instalación", image: "./FOTOS/Psa_S1000-2.png", basePrice: 4800, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString() },
       { id: "prod_003", name: "Purificador PSA S1000-2 + grifería BM", details: "Purificador de agua bajo mesada de alto rendimiento. Con grifería bajo mesada", image: "./FOTOS/Psa_S1000-2.png", basePrice: 5581, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 610, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString() },
       { id: "prod_004", name: "Purificador PSA SENIOR 4 SM", details: "Purificador de agua sobre mesada, 36000 litros de rendimiento", image: "./FOTOS/Psa_Senior4.png", basePrice: 4150, performance: 36000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 3725, renewalFrequency: 36, createdAt: new Date().toISOString() },
       { id: "prod_005", name: "Purificador PSA SENIOR BIANCO SM", details: "Purificador de agua sobre mesada de alto rendimiento. 36000 litros", image: "./FOTOS/PSA-Senior.png", basePrice: 3295, performance: 36000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 2960, renewalFrequency: 36, createdAt: new Date().toISOString() },
       { id: "prod_006", name: "Purificador de AIRE", details: "Alta eficiencia gracias a las 4 etapas de purificación.", image: "./FOTOS/PSA-Aire.png", basePrice: 8655, performance: 100, usefulLife: 3, warranty: "24 meses", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 635, renewalFrequency: 12, createdAt: new Date().toISOString() },
       { id: "prod_007", name: "Purificador de Ducha PSA", details: "Agua sin cloro, trihalometanos y metales pesados para el baño. Instalación sin Costo.", image: "./FOTOS/Psa_Ducha_nueva.png", basePrice: 1515, performance: 150000, usefulLife: 3, warranty: "12 meses", maintenanceCost: 0, maintenanceFrequency: 6, installationCost: 0, renewalCost: 586, renewalFrequency: 6, createdAt: new Date().toISOString() }
-
     ];
 
-    const DEFAULT_COMPANY = { name: "PSA Bolivia S.R.L.", address: "Av. San Martin - Edif. Manzana 40\nSanta Cruz de la Sierra, Bolivia", phone: "+591 75371354", email: "contacto@psabolivia.com" };
-    const DEFAULT_ADVISOR = { name: "Daniel Garcia", dip: "20000038", signatureTitle: "Asesor Técnico Autorizado" };
-    const DEFAULT_IVA = { rate: 13, description: "Impuesto al Valor Agregado" };
+    const DEFAULT_COMPANY = { name: "PSA Bolivia", address: "Av. San Martin - Edif. Manzana 40\nSanta Cruz de la Sierra, Bolivia", phone: "+591 75371354", email: "contacto@psabolivia.com" };
+    const DEFAULT_ADVISOR = { name: "Daniel Garcia", dip: "20000038", signatureTitle: "Asesor en Purificación de Agua y Aire" };
+    const DEFAULT_IVA = { rate: 10, description: "Impuesto al Valor Agregado" };
 
     const PALETTE = [
       { p: "#3b82f6", s: "#10b981" }, // Prod 1: Azul, Verde
@@ -1206,27 +1213,27 @@
       const grandTotalSavings = totalWaterSavings + totalEnergySavingsAccumulated;
 
       area.innerHTML = `
-        <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-xl p-6 text-white shadow-md mb-6 flex flex-col md:flex-row items-center justify-between print:bg-emerald-50 print:text-emerald-900 print:shadow-none print:border-2 print:border-emerald-500 gap-4 transition-all">
-          <div class="flex items-center gap-4">
-            <div class="bg-white/20 p-3 rounded-full print:bg-emerald-200">
-              <i data-lucide="trending-up" class="w-8 h-8 print:text-emerald-700"></i>
-            </div>
-            <div>
-              <h3 class="font-black text-xl lg:text-2xl tracking-tight">Gran Total de Ahorro Consolidado</h3>
-              <p class="text-emerald-100 text-sm font-medium print:text-emerald-700">Proyección a ${years} años (Agua + Energía CRE)</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <div class="text-3xl lg:text-4xl font-black tracking-tighter drop-shadow-md print:drop-shadow-none print:text-emerald-800">
-              ${formatBs(grandTotalSavings)}
-            </div>
-            <div class="text-xs text-emerald-100 mt-1.5 font-semibold flex flex-wrap items-center justify-start md:justify-end gap-2 print:text-emerald-600">
-              <span class="bg-black/20 px-2 py-0.5 rounded print:bg-emerald-100">💧 Agua: ${formatBs(totalWaterSavings)}</span>
-              <span class="bg-black/20 px-2 py-0.5 rounded print:bg-emerald-100">⚡ Energía: ${formatBs(totalEnergySavingsAccumulated)}</span>
-            </div>
-          </div>
-        </div>
-      `;
+  <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-xl p-6 text-white shadow-md mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <div class="bg-white/20 p-3 rounded-full">
+        <i data-lucide="trending-up" class="w-8 h-8"></i>
+      </div>
+      <div>
+        <h3 class="font-black text-xl lg:text-2xl tracking-tight">Gran Total de Ahorro Consolidado</h3>
+        <p class="text-emerald-100 text-sm font-medium">Proyección a ${years} años (Agua + Energía CRE)</p>
+      </div>
+    </div>
+    <div class="text-right">
+      <div class="text-3xl lg:text-4xl font-black tracking-tighter">
+        ${formatBs(grandTotalSavings)}
+      </div>
+      <div class="text-xs text-emerald-100 mt-1.5 font-semibold flex flex-wrap items-center justify-start md:justify-end gap-2">
+        <span class="bg-black/20 px-2 py-0.5 rounded">💧 Agua: ${formatBs(totalWaterSavings)}</span>
+        <span class="bg-black/20 px-2 py-0.5 rounded">⚡ Energía: ${formatBs(totalEnergySavingsAccumulated)}</span>
+      </div>
+    </div>
+  </div>
+`;
       lucide.createIcons();
     }
 
@@ -1264,7 +1271,7 @@
             <td class="p-3 text-slate-700 border-l text-center font-bold">${formatBs(calc.initialCost)}</td>
           </tr>
           <tr class="bg-slate-50/50 hover:bg-slate-50">
-            <td class="p-3 font-semibold text-slate-600">Punto de Amortización (PRI)</td>
+            <td class="p-3 font-semibold text-slate-600">Retorno de Inversión (PRI)</td>
             <td class="p-3 text-slate-400 border-l text-center">-</td>
             <td class="p-3 text-violet-700 font-black border-l text-center text-base">${calc.roiMonth ? `${calc.roiMonth} meses` : 'Inmediato / Menor a 1 mes'}</td>
           </tr>
@@ -1303,7 +1310,7 @@
               <div class="text-lg md:text-xl font-black ${hasAhorro ? 'text-emerald-600' : 'text-red-500'}">${formatBs(calc.totalSavings)}</div>
             </div>
             <div class="bg-violet-50 p-4 rounded-lg border border-violet-100 print:border-violet-200">
-              <div class="text-violet-600 text-[10px] font-bold uppercase tracking-wider mb-1">Punto de Amortización</div>
+              <div class="text-violet-600 text-[10px] font-bold uppercase tracking-wider mb-1">Retorno de Inversión</div>
               <div class="text-lg md:text-xl font-black text-violet-700">${calc.roiMonth ? `${calc.roiMonth} Meses` : 'No alcanza'}</div>
             </div>
           </div>
@@ -1749,9 +1756,9 @@
             </td>
             <td class="p-3 text-slate-600 whitespace-pre-line text-xs max-w-xs md:max-w-md">${item.product.details || '-'}</td>
             <td class="p-3 text-center font-bold text-slate-700">${item.quantity}</td>
-            <td class="p-3 text-right text-slate-700 font-medium">${formatBs(priceWithTaxUnit)}</td>
-            <td class="p-3 text-right text-slate-700 font-medium">${installationWithTax > 0 ? formatBs(installationWithTax) : 'Bs 0'}</td>
-            <td class="p-3 text-right font-bold text-slate-900">${formatBs(partialTotal)}</td>
+           <td class="p-3 text-right text-slate-700 font-medium whitespace-nowrap">${formatBs(priceWithTaxUnit)}</td>
+<td class="p-3 text-right text-slate-700 font-medium whitespace-nowrap">${installationWithTax > 0 ? formatBs(installationWithTax) : 'Bs 0'}</td>
+<td class="p-3 text-right font-bold text-slate-900 whitespace-nowrap">${formatBs(partialTotal)}</td>
           </tr>
         `;
       });
