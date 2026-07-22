@@ -334,7 +334,7 @@
           </div>
 
           <div class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200 text-xs">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider mb-2">Resumen de Parámetros de Operación</h3>
+            <h3 class="font-bold text-slate-700 uppercase tracking-wider mb-2">Datos Para la Proyección</h3>
             <div class="grid grid-cols-4 gap-4">
               <div><span class="text-slate-400 block uppercase text-[10px]">Consumo Semanal</span><span
                   id="p-print-bottles" class="font-bold text-slate-800"></span></div>
@@ -342,7 +342,7 @@
                   id="p-print-cost" class="font-bold text-slate-800"></span></div>
               <div><span class="text-slate-400 block uppercase text-[10px]">Volumen Proyectado</span><span
                   id="p-print-volume" class="font-bold text-slate-800"></span></div>
-              <div><span class="text-slate-400 block uppercase text-[10px]">Amortización</span><span id="p-print-years"
+              <div><span class="text-slate-400 block uppercase text-[10px]">Proyección</span><span id="p-print-years"
                   class="font-bold text-slate-800"></span></div>
             </div>
           </div>
@@ -377,6 +377,17 @@
           <div id="consolidated-cards-area">
             <!-- Inyectado dinámicamente -->
           </div>
+
+          <!-- NUEVO GRÁFICO 0: GRAN TOTAL ACUMULADO (AGUA + ENERGÍA) -->
+          <div id="container-chart-grand-total"
+            class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300 break-inside-avoid">
+            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Análisis de Flujo de Caja
+              Consolidado Global (Agua + Energía)</h3>
+            <div class="h-80 w-full relative">
+              <canvas id="chart-grand-total"></canvas>
+            </div>
+          </div>
+
 
           <!-- GRÁFICO 1: EVOLUCIÓN ACUMULADA -->
           <div
@@ -449,7 +460,7 @@
           </div>
 
           <!-- GRÁFICO 4: EFICIENCIA ENERGÉTICA ACUMULADA -->
-          <div
+          <div id="container-chart-energy-accumulated"
             class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300 break-inside-avoid">
             <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Análisis de Consumo Eléctrico
               Acumulado (CRE)</h3>
@@ -472,8 +483,8 @@
           </div>
 
           <!-- GRÁFICO 5: EFICIENCIA ENERGÉTICA ANUAL -->
-          <div
-            class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300 break-inside-avoid">
+          <div id="container-chart-energy-yearly" class=" bg-white p-6 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300
+            break-inside-avoid">
             <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Análisis de Consumo Eléctrico
               Anual (Costos del Año - CRE)</h3>
             <div class="h-80 w-full relative">
@@ -946,6 +957,7 @@
     let isAdminAuthenticated = false;
 
     // Instancias de Gráficos de Chart.js
+    let chartGrandTotalInstance = null;
     let chartAccumulatedInstance = null;
     let chartYearlyInstance = null;
     let chartWaterInstance = null;
@@ -1031,14 +1043,25 @@
 
     // --- CONSOLIDATED ROI CALCULATION ENGINE ---
     function calculateConsolidatedROI(activeProducts, params, taxRate) {
-      const { bottlesPerWeek, bottleCost, bottleCap, invoiced, years } = params;
+      const { bottlesPerWeek, bottleCost, bottleCap, invoiced, years, qtyTradEnergy, wattsTradEnergy, activeHoursEnergy, rateCreEnergy } = params;
 
       const months = years * 12;
       const taxMultiplier = invoiced ? (1 + taxRate / 100) : 1;
       const bottlesPerMonth = (bottlesPerWeek * 52) / 12;
 
-      let accPsa = 0;
-      let accTrad = 0;
+      // Contabilizamos cuántas unidades PSA tienen la opción de energía activada
+      const energyPsaUnits = activeProducts.reduce((sum, r) => sum + (r.inEnergy ? r.quantity : 0), 0);
+
+      // BANDERA LÓGICA: ¿Hacemos la comparativa de energía o la ignoramos?
+      const hasEnergyCalc = energyPsaUnits > 0;
+
+      // Si la bandera es falsa, el costo eléctrico para AMBOS escenarios es 0. 
+      // Si es verdadera, calculamos ambos costos en base a los datos.
+      const costMonthTradEnergy = hasEnergyCalc ? (((wattsTradEnergy / 1000) * activeHoursEnergy) * rateCreEnergy * qtyTradEnergy * 30.4167) : 0;
+      const costMonthPsaEnergy = hasEnergyCalc ? (((550 / 1000) * activeHoursEnergy) * rateCreEnergy * energyPsaUnits * 30.4167) : 0;
+
+      let accPsaWater = 0, accTradWater = 0;
+      let accPsaTotal = 0, accTradTotal = 0;
       let roiMonth = null;
       const monthlyData = [];
       const yearlyData = [];
@@ -1048,56 +1071,74 @@
         return sum + itemInitial;
       }, 0);
 
-      let yearPsaCost = 0;
-      let yearTradCost = 0;
+      let yearPsaWaterCost = 0, yearTradWaterCost = 0;
+      let yearPsaTotalCost = 0, yearTradTotalCost = 0;
       let currentYear = 1;
 
       const maxSimulationMonths = 360;
-      let simAccPsa = 0;
-      let simAccTrad = 0;
+      let simAccPsaWater = 0, simAccTradWater = 0;
+      let simAccPsaTotal = 0, simAccTradTotal = 0;
 
       for (let m = 1; m <= maxSimulationMonths; m++) {
-        const tradMonthCost = bottlesPerMonth * bottleCost;
-        simAccTrad += tradMonthCost;
+        // Gasto Agua
+        const tradMonthCostWater = bottlesPerMonth * bottleCost;
+        let psaMonthCostWater = 0;
 
-        let psaMonthCost = 0;
-        if (m === 1) psaMonthCost += totalInitialCost;
+        if (m === 1) psaMonthCostWater += totalInitialCost;
 
         activeProducts.forEach(item => {
           const p = item.product;
           if (m > 12 && p.maintenanceFrequency > 0 && (m - 1) % p.maintenanceFrequency === 0) {
-            psaMonthCost += (p.maintenanceCost * item.quantity) * taxMultiplier;
+            psaMonthCostWater += (p.maintenanceCost * item.quantity) * taxMultiplier;
           }
           if (m > 1 && p.renewalFrequency > 0 && (m - 1) % p.renewalFrequency === 0) {
-            psaMonthCost += (p.renewalCost * item.quantity) * taxMultiplier;
+            psaMonthCostWater += (p.renewalCost * item.quantity) * taxMultiplier;
           }
         });
 
-        simAccPsa += psaMonthCost;
+        simAccTradWater += tradMonthCostWater;
+        simAccPsaWater += psaMonthCostWater;
 
-        if (roiMonth === null && simAccPsa < simAccTrad) {
+        // Gasto Total Combinado (Agua + Energía)
+        const tradMonthCostTotal = tradMonthCostWater + costMonthTradEnergy;
+        const psaMonthCostTotal = psaMonthCostWater + costMonthPsaEnergy;
+
+        simAccTradTotal += tradMonthCostTotal;
+        simAccPsaTotal += psaMonthCostTotal;
+
+        // ROI basado en el Gran Total de Ahorro
+        if (roiMonth === null && simAccPsaTotal < simAccTradTotal) {
           roiMonth = m;
         }
 
         if (m <= months) {
-          accPsa = simAccPsa;
-          accTrad = simAccTrad;
-          yearTradCost += tradMonthCost;
-          yearPsaCost += psaMonthCost;
+          accPsaWater = simAccPsaWater;
+          accTradWater = simAccTradWater;
+          accPsaTotal = simAccPsaTotal;
+          accTradTotal = simAccTradTotal;
 
-          monthlyData.push({ month: m, accPsa, accTrad, psaMonthCost, tradMonthCost });
+          yearTradWaterCost += tradMonthCostWater;
+          yearPsaWaterCost += psaMonthCostWater;
+          yearTradTotalCost += tradMonthCostTotal;
+          yearPsaTotalCost += psaMonthCostTotal;
+
+          monthlyData.push({ month: m, accPsa: accPsaWater, accTrad: accTradWater, psaMonthCost: psaMonthCostWater, tradMonthCost: tradMonthCostWater });
 
           if (m % 12 === 0) {
             yearlyData.push({
               year: currentYear,
-              psaYearCost: yearPsaCost,
-              tradYearCost: yearTradCost,
-              savings: yearTradCost - yearPsaCost,
-              accPsa,
-              accTrad
+              psaYearCost: yearPsaWaterCost,
+              tradYearCost: yearTradWaterCost,
+              savings: yearTradWaterCost - yearPsaWaterCost,
+              accPsa: accPsaWater,
+              accTrad: accTradWater,
+              // Nuevos datos para el gráfico fusionado
+              accPsaTotal: accPsaTotal,
+              accTradTotal: accTradTotal,
+              totalSavings: yearTradTotalCost - yearPsaTotalCost
             });
-            yearPsaCost = 0;
-            yearTradCost = 0;
+            yearPsaWaterCost = 0; yearTradWaterCost = 0;
+            yearPsaTotalCost = 0; yearTradTotalCost = 0;
             currentYear++;
           }
         }
@@ -1107,13 +1148,17 @@
       const totalPsaCapacity = activeProducts.reduce((sum, item) => sum + (item.product.performance * item.quantity), 0);
 
       return {
+        hasEnergyCalc,
         initialCost: totalInitialCost,
-        totalPsaCost: accPsa,
-        totalTradCost: accTrad,
-        totalSavings: accTrad - accPsa,
+        totalPsaCost: accPsaWater,     // Se mantiene solo agua para los cuadros antiguos
+        totalTradCost: accTradWater,   // Se mantiene solo agua para los cuadros antiguos
+        totalSavings: accTradWater - accPsaWater,
+        grandTotalPsaCost: accPsaTotal,      // Nuevos datos para cuadros globales
+        grandTotalTradCost: accTradTotal,
+        grandTotalSavings: accTradTotal - accPsaTotal,
         roiMonth,
-        costPerLiterTrad: accTrad / totalWaterLiters,
-        costPerLiterPsa: accPsa / totalPsaCapacity,
+        costPerLiterTrad: accTradWater / totalWaterLiters,
+        costPerLiterPsa: accPsaWater / totalPsaCapacity,
         monthlyData,
         yearlyData,
         waterLiters: totalWaterLiters,
@@ -1209,60 +1254,77 @@
       const kwhDayPsa = (550 / 1000) * activeHoursEnergy;
       const costYearPsaAccum = kwhDayPsa * rateCreEnergy * energyPsaUnits * 365;
 
-      const totalEnergySavingsAccumulated = (costYearTradAccum - costYearPsaAccum) * years;
+      const hasEnergyCalc = energyPsaUnits > 0;
+
+      // CORRECCIÓN CRÍTICA: Si no hay cálculo de energía, el ahorro energético es 0 absoluto.
+      const totalEnergySavingsAccumulated = hasEnergyCalc ? (costYearTradAccum - costYearPsaAccum) * years : 0;
       const totalWaterSavings = calc.totalSavings;
       const grandTotalSavings = totalWaterSavings + totalEnergySavingsAccumulated;
 
+      // Renderizado dinámico de textos y etiquetas
+      const textContext = hasEnergyCalc ? `Proyección a ${years} años (Agua + Energía CRE)` : `Proyección a ${years} años (Solo Agua)`;
+      const energyBadge = hasEnergyCalc ? `<span class="bg-black/20 px-2 py-0.5 rounded">⚡ Energía: ${formatBs(totalEnergySavingsAccumulated)}</span>` : '';
+
       area.innerHTML = `
-  <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-xl p-6 text-white shadow-md mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
-    <div class="flex items-center gap-4">
-      <div class="bg-white/20 p-3 rounded-full">
-        <i data-lucide="trending-up" class="w-8 h-8"></i>
+    <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-xl p-6 text-white shadow-md mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="bg-white/20 p-3 rounded-full">
+          <i data-lucide="trending-up" class="w-8 h-8"></i>
+        </div>
+        <div>
+          <h3 class="font-black text-xl lg:text-2xl tracking-tight">Gran Total de Ahorro Consolidado</h3>
+          <p class="text-emerald-100 text-sm font-medium">${textContext}</p>
+        </div>
       </div>
-      <div>
-        <h3 class="font-black text-xl lg:text-2xl tracking-tight">Gran Total de Ahorro Consolidado</h3>
-        <p class="text-emerald-100 text-sm font-medium">Proyección a ${years} años (Agua + Energía CRE)</p>
+      <div class="text-right">
+        <div class="text-3xl lg:text-4xl font-black tracking-tighter">
+          ${formatBs(grandTotalSavings)}
+        </div>
+        <div class="text-xs text-emerald-100 mt-1.5 font-semibold flex flex-wrap items-center justify-start md:justify-end gap-2">
+          <span class="bg-black/20 px-2 py-0.5 rounded">💧 Agua: ${formatBs(totalWaterSavings)}</span>
+          ${energyBadge}
+        </div>
       </div>
     </div>
-    <div class="text-right">
-      <div class="text-3xl lg:text-4xl font-black tracking-tighter">
-        ${formatBs(grandTotalSavings)}
-      </div>
-      <div class="text-xs text-emerald-100 mt-1.5 font-semibold flex flex-wrap items-center justify-start md:justify-end gap-2">
-        <span class="bg-black/20 px-2 py-0.5 rounded">💧 Agua: ${formatBs(totalWaterSavings)}</span>
-        <span class="bg-black/20 px-2 py-0.5 rounded">⚡ Energía: ${formatBs(totalEnergySavingsAccumulated)}</span>
-      </div>
-    </div>
-  </div>
-`;
+  `;
       lucide.createIcons();
     }
 
     // --- RENDER COMPARATIVE TABLE (CONSOLIDATED STUDY) ---
     function renderComparativeTable(calc, params) {
-      document.getElementById('table-comparison-title').innerText = `Matriz de Amortización Técnica y Económica a ${params.years} Años`;
+      const rowOperatingBudget = calc.hasEnergyCalc ? "Presupuesto Operativo (Agua + Energía CRE)" : "Presupuesto Operativo (Solo Agua)";
+      document.getElementById('table-comparison-title').innerText = `Comparativa Técnica y Económica a ${params.years} Años`;
+
+      // Lógica dinámica de rentabilidad
+      const ahorroFinal = calc.grandTotalSavings;
+      const isProfitable = ahorroFinal >= 0;
+
+      const savingsBg = isProfitable ? 'bg-emerald-50/40' : 'bg-red-50/40';
+      const savingsText = isProfitable ? 'text-emerald-600' : 'text-red-600';
+      const badgeBg = isProfitable ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800';
+      const badgeText = isProfitable ? 'PROYECTO ALTAMENTE RENTABLE' : 'PROYECTO NO RENTABLE';
 
       let html = `
         <thead class="bg-blue-800 text-white border-b print:bg-slate-100 print:text-slate-900 text-xs uppercase font-bold">
           <tr>
             <th class="p-3 w-1/2">Indicador de Rendimiento</th>
-            <th class="p-3 border-l text-center">Gasto Actual en Bidones</th>
-            <th class="p-3 border-l text-center">Alternativa de Equipamiento PSA</th>
+            <th class="p-3 border-l text-center">Gasto Actual Proyectado</th>
+            <th class="p-3 border-l text-center">Alternativa Consolidada PSA</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100 text-xs md:text-sm">
           <tr class="hover:bg-slate-50/50">
-            <td class="p-3 font-semibold text-slate-600">Presupuesto Operativo Proyectado</td>
-            <td class="p-3 font-bold text-red-600 border-l text-center">${formatBs(calc.totalTradCost)}</td>
-            <td class="p-3 font-bold text-emerald-600 border-l text-center">${formatBs(calc.totalPsaCost)}</td>
+            <td class="p-3 font-semibold text-slate-600">${rowOperatingBudget}</td>
+            <td class="p-3 font-bold text-red-600 border-l text-center">${formatBs(calc.grandTotalTradCost)}</td>
+            <td class="p-3 font-bold text-emerald-600 border-l text-center">${formatBs(calc.grandTotalPsaCost)}</td>
           </tr>
           <tr class="bg-slate-50/50 hover:bg-slate-50">
-            <td class="p-3 font-black text-slate-800">Ahorro Neto Real</td>
+            <td class="p-3 font-black text-slate-800">Ahorro Neto Real Consolidado</td>
             <td class="p-3 text-slate-400 border-l text-center">-</td>
-            <td class="p-3 font-black text-emerald-600 border-l text-center bg-emerald-50/40">
+            <td class="p-3 font-black ${savingsText} border-l text-center ${savingsBg}">
               <div class="flex flex-col items-center justify-center">
-                <span class="text-base">${formatBs(calc.totalSavings)}</span>
-                <span class="text-[10px] text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded-full mt-1">PROYECTO ALTAMENTE RENTABLE</span>
+                <span class="text-base">${formatBs(ahorroFinal)}</span>
+                <span class="text-[10px] font-bold ${badgeBg} px-2 py-0.5 rounded-full mt-1 uppercase">${badgeText}</span>
               </div>
             </td>
           </tr>
@@ -1274,7 +1336,7 @@
           <tr class="bg-slate-50/50 hover:bg-slate-50">
             <td class="p-3 font-semibold text-slate-600">Retorno de Inversión (PRI)</td>
             <td class="p-3 text-slate-400 border-l text-center">-</td>
-            <td class="p-3 text-violet-700 font-black border-l text-center text-base">${calc.roiMonth ? `${calc.roiMonth} meses` : 'Inmediato / Menor a 1 mes'}</td>
+            <td class="p-3 text-violet-700 font-black border-l text-center text-base">${calc.roiMonth ? `${calc.roiMonth} meses` : (isProfitable ? 'Inmediato / Menor a 1 mes' : 'No se recupera la inversión')}</td>
           </tr>
           <tr class="hover:bg-slate-50">
             <td class="p-3 font-semibold text-slate-600">Costo Equivalente por Litro de Agua</td>
@@ -1288,7 +1350,8 @@
 
     // --- RENDER CONSOLIDATED CARDS ---
     function renderIndividualCards(calc, comparativeProducts) {
-      const hasAhorro = calc.totalSavings >= 0;
+      // Usamos el Gran Total para definir el color y los montos a mostrar
+      const hasAhorro = calc.grandTotalSavings >= 0;
       const totalUnits = comparativeProducts.reduce((sum, r) => sum + r.quantity, 0);
 
       let html = `
@@ -1299,16 +1362,16 @@
           </h4>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="bg-red-50 p-4 rounded-lg border border-red-100 print:border-red-200">
-              <div class="text-red-500 text-[10px] font-bold uppercase tracking-wider mb-1">Gasto en Bidones</div>
-              <div class="text-lg md:text-xl font-black text-red-600">${formatBs(calc.totalTradCost)}</div>
+              <div class="text-red-500 text-[10px] font-bold uppercase tracking-wider mb-1">Gasto Actual (Total)</div>
+              <div class="text-lg md:text-xl font-black text-red-600">${formatBs(calc.grandTotalTradCost)}</div>
             </div>
             <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100 print:border-emerald-200">
-              <div class="text-emerald-600 text-[10px] font-bold uppercase tracking-wider mb-1">Costo Solución PSA</div>
-              <div class="text-lg md:text-xl font-black text-emerald-700">${formatBs(calc.totalPsaCost)}</div>
+              <div class="text-emerald-600 text-[10px] font-bold uppercase tracking-wider mb-1">Costo Solución PSA (Total)</div>
+              <div class="text-lg md:text-xl font-black text-emerald-700">${formatBs(calc.grandTotalPsaCost)}</div>
             </div>
             <div class="p-4 rounded-lg border ${hasAhorro ? 'bg-emerald-50 border-emerald-100' : 'bg-red-50 border-red-100'}">
-              <div class="text-[10px] font-bold uppercase tracking-wider mb-1 ${hasAhorro ? 'text-emerald-700' : 'text-red-600'}">Ahorro Estimado</div>
-              <div class="text-lg md:text-xl font-black ${hasAhorro ? 'text-emerald-600' : 'text-red-500'}">${formatBs(calc.totalSavings)}</div>
+              <div class="text-[10px] font-bold uppercase tracking-wider mb-1 ${hasAhorro ? 'text-emerald-700' : 'text-red-600'}">Ahorro Neto Estimado</div>
+              <div class="text-lg md:text-xl font-black ${hasAhorro ? 'text-emerald-600' : 'text-red-500'}">${formatBs(calc.grandTotalSavings)}</div>
             </div>
             <div class="bg-violet-50 p-4 rounded-lg border border-violet-100 print:border-violet-200">
               <div class="text-violet-600 text-[10px] font-bold uppercase tracking-wider mb-1">Retorno de Inversión</div>
@@ -1324,6 +1387,58 @@
     function renderCharts(calc, comparativeProducts, params) {
       const { years, bottlesPerWeek, bottleCap, qtyTradEnergy, wattsTradEnergy, activeHoursEnergy, rateCreEnergy } = params;
       const labelsYears = Array.from({ length: years }, (_, i) => `Año ${i + 1}`);
+
+      // Dataset 0: GRAN TOTAL ACUMULADO (Agua + Energía)
+      const datasetsGrandTotal = [
+        {
+          label: "Gasto Operacional Proyectado (Agua + Energía)",
+          data: calc.yearlyData.map(d => d.accTradTotal),
+          borderColor: "#f97316", // Naranja para distinguirlo visualmente
+          backgroundColor: "rgba(249, 115, 22, 0.1)",
+          borderWidth: 3,
+          pointRadius: 5,
+          fill: false,
+          tension: 0.1
+        },
+        {
+          label: "Inversión y Gasto PSA (Agua + Energía)",
+          data: calc.yearlyData.map(d => d.accPsaTotal),
+          borderColor: "#3b82f6", // Azul 
+          backgroundColor: "rgba(59, 130, 246, 0.1)",
+          borderWidth: 3,
+          pointRadius: 5,
+          fill: false,
+          tension: 0.1
+        },
+        {
+          label: "Ahorro Neto Real Consolidado",
+          data: calc.yearlyData.map(d => Math.max(0, d.accTradTotal - d.accPsaTotal)),
+          borderColor: "#10b981", // Verde
+          borderWidth: 2,
+          borderDash: [5, 5],
+          pointRadius: 4,
+          fill: false,
+          tension: 0.1
+        }
+      ];
+
+      if (chartGrandTotalInstance) chartGrandTotalInstance.destroy();
+      const ctxGrandTotal = document.getElementById('chart-grand-total').getContext('2d');
+      chartGrandTotalInstance = new Chart(ctxGrandTotal, {
+        type: 'line',
+        data: { labels: labelsYears, datasets: datasetsGrandTotal },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+            tooltip: { callbacks: { label: (context) => ` ${context.dataset.label}: ${formatBs(context.raw)}` } }
+          },
+          scales: {
+            y: { ticks: { callback: (val) => `Bs ${val / 1000}k` } }
+          }
+        }
+      });
 
       // Dataset 1: Acumulado Anualizado Consolidado
       const datasetsAcc = [
@@ -1464,123 +1579,158 @@
         }
       });
 
-      // Dataset 4: Análisis de Eficiencia Energética (Bs. Acumulado)
-      const kwhDayTrad = (wattsTradEnergy / 1000) * activeHoursEnergy;
-      const costDayTradUnit = kwhDayTrad * rateCreEnergy;
-      const costDayTradTotal = costDayTradUnit * qtyTradEnergy;
-      const costYearTradAccum = costDayTradTotal * 365;
 
-      const activeProductsForEnergy = selectedProductsState.map(sp => {
-        const product = db.products.find(p => p.id === sp.id);
-        if (!product) return null;
-        return { quantity: sp.quantity, inEnergy: sp.inEnergy };
-      }).filter(Boolean);
 
-      const energyPsaUnits = activeProductsForEnergy.reduce((sum, r) => sum + (r.inEnergy ? r.quantity : 0), 0);
-      const kwhDayPsa = (550 / 1000) * activeHoursEnergy;
-      const costDayPsaUnit = kwhDayPsa * rateCreEnergy;
-      const costDayPsaTotal = costDayPsaUnit * energyPsaUnits;
-      const costYearPsaAccum = costDayPsaTotal * 365;
+      // ASIGNAR IDs A LOS CONTENEDORES EN TU HTML:
+      // Asegúrate de que los <div> que envuelven los <canvas> de energía 
+      // tengan un ID para poder ocultarlos, ej: id="container-chart-energy-accumulated"
 
-      const datasetsEnergy = [
-        {
-          label: "Dispensadores Actuales (Energía)",
-          data: labelsYears.map((_, i) => costYearTradAccum * (i + 1)),
-          borderColor: "#f97316",
-          backgroundColor: "rgba(249, 115, 22, 0.1)",
-          borderWidth: 3,
-          pointRadius: 5,
-          fill: false,
-          tension: 0.1
-        },
-        {
-          label: "Dispensadores PSA Propuestos (Energía)",
-          data: labelsYears.map((_, i) => costYearPsaAccum * (i + 1)),
-          borderColor: "#3b82f6",
-          backgroundColor: "rgba(59, 130, 246, 0.1)",
-          borderWidth: 3,
-          pointRadius: 5,
-          fill: false,
-          tension: 0.1
-        },
-        {
-          label: "Ahorro Energético Acumulado (CRE)",
-          data: labelsYears.map((_, i) => (costYearTradAccum - costYearPsaAccum) * (i + 1)),
-          borderColor: "#10b981",
-          borderWidth: 2,
-          borderDash: [5, 5],
-          pointRadius: 4,
-          fill: false,
-          tension: 0.1
-        }
-      ];
+      const containerEnergyAcc = document.getElementById('container-chart-energy-accumulated');
+      const containerEnergyYearly = document.getElementById('container-chart-energy-yearly');
+      const containerGrandTotal = document.getElementById('container-chart-grand-total'); // Nuevo
 
-      if (chartEnergyInstance) chartEnergyInstance.destroy();
-      const ctxEnergy = document.getElementById('chart-energy').getContext('2d');
-      chartEnergyInstance = new Chart(ctxEnergy, {
-        type: 'line',
-        data: { labels: labelsYears, datasets: datasetsEnergy },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
-            tooltip: { callbacks: { label: (context) => ` ${context.dataset.label}: ${formatBsDec(context.raw)}` } }
+      if (!calc.hasEnergyCalc) {
+        // 1. Ocultar los contenedores del DOM
+        if (containerEnergyAcc) containerEnergyAcc.classList.add('hidden');
+        if (containerEnergyYearly) containerEnergyYearly.classList.add('hidden');
+        if (containerGrandTotal) containerGrandTotal.classList.add('hidden'); // Se oculta porque es redundante con el de agua
+
+        // 2. Destruir las instancias
+        if (typeof chartEnergyInstance !== 'undefined' && chartEnergyInstance) chartEnergyInstance.destroy();
+        if (typeof chartEnergyYearlyInstance !== 'undefined' && chartEnergyYearlyInstance) chartEnergyYearlyInstance.destroy();
+        if (typeof chartGrandTotalInstance !== 'undefined' && chartGrandTotalInstance) chartGrandTotalInstance.destroy();
+
+      } else {
+        // 1. Mostrar los contenedores
+        if (containerEnergyAcc) containerEnergyAcc.classList.remove('hidden');
+        if (containerEnergyYearly) containerEnergyYearly.classList.remove('hidden');
+        if (containerGrandTotal) containerGrandTotal.classList.remove('hidden'); // Nuevo
+        // 2. Aquí va todo tu código normal de Chart.js para generar:
+        // - El gráfico de Consumo Eléctrico Acumulado (CRE)
+        // - El gráfico de Consumo Eléctrico Anual (Costos del Año - CRE)
+
+        // Ejemplo de cómo lo deberías tener envuelto:
+        /*
+        const ctxEnergyAcc = document.getElementById('chart-energy-accumulated').getContext('2d');
+        chartEnergyAccInstance = new Chart(ctxEnergyAcc, { ... });
+        */
+        // Dataset 4: Análisis de Eficiencia Energética (Bs. Acumulado)
+        const kwhDayTrad = (wattsTradEnergy / 1000) * activeHoursEnergy;
+        const costDayTradUnit = kwhDayTrad * rateCreEnergy;
+        const costDayTradTotal = costDayTradUnit * qtyTradEnergy;
+        const costYearTradAccum = costDayTradTotal * 365;
+
+        const activeProductsForEnergy = selectedProductsState.map(sp => {
+          const product = db.products.find(p => p.id === sp.id);
+          if (!product) return null;
+          return { quantity: sp.quantity, inEnergy: sp.inEnergy };
+        }).filter(Boolean);
+
+        const energyPsaUnits = activeProductsForEnergy.reduce((sum, r) => sum + (r.inEnergy ? r.quantity : 0), 0);
+        const kwhDayPsa = (550 / 1000) * activeHoursEnergy;
+        const costDayPsaUnit = kwhDayPsa * rateCreEnergy;
+        const costDayPsaTotal = costDayPsaUnit * energyPsaUnits;
+        const costYearPsaAccum = costDayPsaTotal * 365;
+
+        const datasetsEnergy = [
+          {
+            label: "Dispensadores Actuales (Energía)",
+            data: labelsYears.map((_, i) => costYearTradAccum * (i + 1)),
+            borderColor: "#f97316",
+            backgroundColor: "rgba(249, 115, 22, 0.1)",
+            borderWidth: 3,
+            pointRadius: 5,
+            fill: false,
+            tension: 0.1
           },
-          scales: {
-            y: { ticks: { callback: (val) => `Bs ${val.toLocaleString()}` } }
-          }
-        }
-      });
-
-      // Dataset 5: Análisis de Eficiencia Energética Anualizada
-      const datasetsEnergyYearly = [
-        {
-          label: "Gasto Energía Actual (Anual)",
-          data: Array(years).fill(costYearTradAccum),
-          backgroundColor: "#f97316",
-          borderRadius: 4
-        },
-        {
-          label: "Gasto Energía PSA (Anual)",
-          data: Array(years).fill(costYearPsaAccum),
-          backgroundColor: "#3b82f6",
-          borderRadius: 4
-        },
-        {
-          label: "Ahorro Energético Anual (CRE)",
-          data: Array(years).fill(costYearTradAccum - costYearPsaAccum),
-          backgroundColor: "#10b981",
-          borderRadius: 4
-        }
-      ];
-
-      if (chartEnergyYearlyInstance) chartEnergyYearlyInstance.destroy();
-      const ctxEnergyYearly = document.getElementById('chart-energy-yearly').getContext('2d');
-      chartEnergyYearlyInstance = new Chart(ctxEnergyYearly, {
-        type: 'bar',
-        data: { labels: labelsYears, datasets: datasetsEnergyYearly },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
-            tooltip: { callbacks: { label: (context) => ` ${context.dataset.label}: ${formatBsDec(context.raw)}` } }
+          {
+            label: "Dispensadores PSA Propuestos (Energía)",
+            data: labelsYears.map((_, i) => costYearPsaAccum * (i + 1)),
+            borderColor: "#3b82f6",
+            backgroundColor: "rgba(59, 130, 246, 0.1)",
+            borderWidth: 3,
+            pointRadius: 5,
+            fill: false,
+            tension: 0.1
           },
-          scales: {
-            y: { ticks: { callback: (val) => `Bs ${val.toLocaleString()}` } }
+          {
+            label: "Ahorro Energético Acumulado (CRE)",
+            data: labelsYears.map((_, i) => (costYearTradAccum - costYearPsaAccum) * (i + 1)),
+            borderColor: "#10b981",
+            borderWidth: 2,
+            borderDash: [5, 5],
+            pointRadius: 4,
+            fill: false,
+            tension: 0.1
           }
-        }
-      });
+        ];
 
-      // RENDERIZADO DE TABLAS DE DATOS ANEXADAS BAJO LOS GRÁFICOS
-      renderChartTables(calc, comparativeProducts, years, annualTradLiters, consolidatedPsaYield, costYearTradAccum, costYearPsaAccum);
-    }
+        if (chartEnergyInstance) chartEnergyInstance.destroy();
+        const ctxEnergy = document.getElementById('chart-energy').getContext('2d');
+        chartEnergyInstance = new Chart(ctxEnergy, {
+          type: 'line',
+          data: { labels: labelsYears, datasets: datasetsEnergy },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+              tooltip: { callbacks: { label: (context) => ` ${context.dataset.label}: ${formatBsDec(context.raw)}` } }
+            },
+            scales: {
+              y: { ticks: { callback: (val) => `Bs ${val.toLocaleString()}` } }
+            }
+          }
+        });
 
-    // --- TABLAS EXPLICATIVAS BAJO GRÁFICOS ---
-    function renderChartTables(calc, comparativeProducts, years, annualTradLiters, consolidatedPsaYield, costYearTradAccum, costYearPsaAccum) {
-      // 1. Tabla Acumulada Anualizada
-      let headAcc = `
+        // Dataset 5: Análisis de Eficiencia Energética Anualizada
+        const datasetsEnergyYearly = [
+          {
+            label: "Gasto Energía Actual (Anual)",
+            data: Array(years).fill(costYearTradAccum),
+            backgroundColor: "#f97316",
+            borderRadius: 4
+          },
+          {
+            label: "Gasto Energía PSA (Anual)",
+            data: Array(years).fill(costYearPsaAccum),
+            backgroundColor: "#3b82f6",
+            borderRadius: 4
+          },
+          {
+            label: "Ahorro Energético Anual (CRE)",
+            data: Array(years).fill(costYearTradAccum - costYearPsaAccum),
+            backgroundColor: "#10b981",
+            borderRadius: 4
+          }
+        ];
+
+        if (chartEnergyYearlyInstance) chartEnergyYearlyInstance.destroy();
+        const ctxEnergyYearly = document.getElementById('chart-energy-yearly').getContext('2d');
+        chartEnergyYearlyInstance = new Chart(ctxEnergyYearly, {
+          type: 'bar',
+          data: { labels: labelsYears, datasets: datasetsEnergyYearly },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+              tooltip: { callbacks: { label: (context) => ` ${context.dataset.label}: ${formatBsDec(context.raw)}` } }
+            },
+            scales: {
+              y: { ticks: { callback: (val) => `Bs ${val.toLocaleString()}` } }
+            }
+          }
+        });
+
+        // RENDERIZADO DE TABLAS DE DATOS ANEXADAS BAJO LOS GRÁFICOS
+        renderChartTables(calc, comparativeProducts, years, annualTradLiters, consolidatedPsaYield, costYearTradAccum, costYearPsaAccum);
+      }
+
+      // --- TABLAS EXPLICATIVAS BAJO GRÁFICOS ---
+      function renderChartTables(calc, comparativeProducts, years, annualTradLiters, consolidatedPsaYield, costYearTradAccum, costYearPsaAccum) {
+        // 1. Tabla Acumulada Anualizada
+        let headAcc = `
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Corte Operativo</th>
@@ -1590,10 +1740,10 @@
           </tr>
         </thead>
       `;
-      let bodyAcc = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
-      for (let y = 0; y < years; y++) {
-        const rY = calc.yearlyData[y];
-        bodyAcc += `
+        let bodyAcc = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
+        for (let y = 0; y < years; y++) {
+          const rY = calc.yearlyData[y];
+          bodyAcc += `
           <tr class="hover:bg-slate-50">
             <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1}</td>
             <td class="p-2 text-red-600 font-bold border-l">${formatBs(rY.accTrad)}</td>
@@ -1601,12 +1751,12 @@
             <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">${formatBs(rY.accTrad - rY.accPsa)}</td>
           </tr>
         `;
-      }
-      bodyAcc += "</tbody>";
-      document.getElementById('table-acc-yearly').innerHTML = headAcc + bodyAcc;
+        }
+        bodyAcc += "</tbody>";
+        document.getElementById('table-acc-yearly').innerHTML = headAcc + bodyAcc;
 
-      // 2. Tabla Inversiones, Gasto y Ahorro del Año
-      let headYear = `
+        // 2. Tabla Inversiones, Gasto y Ahorro del Año
+        let headYear = `
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Período Anual</th>
@@ -1616,10 +1766,10 @@
           </tr>
         </thead>
       `;
-      let bodyYear = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
-      for (let y = 0; y < years; y++) {
-        const rY = calc.yearlyData[y];
-        bodyYear += `
+        let bodyYear = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
+        for (let y = 0; y < years; y++) {
+          const rY = calc.yearlyData[y];
+          bodyYear += `
           <tr class="hover:bg-slate-50">
             <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1}</td>
             <td class="p-2 text-red-600 font-bold border-l">${formatBs(rY.tradYearCost)}</td>
@@ -1627,12 +1777,12 @@
             <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">${formatBs(rY.savings)}</td>
           </tr>
         `;
-      }
-      bodyYear += "</tbody>";
-      document.getElementById('table-yearly-gains').innerHTML = headYear + bodyYear;
+        }
+        bodyYear += "</tbody>";
+        document.getElementById('table-yearly-gains').innerHTML = headYear + bodyYear;
 
-      // 3. Tabla de Comparativa Hídrica Proyectada
-      let headWater = `
+        // 3. Tabla de Comparativa Hídrica Proyectada
+        let headWater = `
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Análisis de Suministro</th>
@@ -1642,12 +1792,12 @@
           </tr>
         </thead>
       `;
-      let bodyWater = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
-      for (let y = 0; y < years; y++) {
-        const cumulativeDemand = annualTradLiters * (y + 1);
-        const cumulativeYield = consolidatedPsaYield * (y + 1);
-        const surplus = cumulativeYield - cumulativeDemand;
-        bodyWater += `
+        let bodyWater = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
+        for (let y = 0; y < years; y++) {
+          const cumulativeDemand = annualTradLiters * (y + 1);
+          const cumulativeYield = consolidatedPsaYield * (y + 1);
+          const surplus = cumulativeYield - cumulativeDemand;
+          bodyWater += `
           <tr class="hover:bg-slate-50">
             <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1} (Acumulado)</td>
             <td class="p-2 text-red-600 font-bold border-l">${formatNum(Math.round(cumulativeDemand))} L</td>
@@ -1655,12 +1805,12 @@
             <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">+${formatNum(Math.round(surplus))} L</td>
           </tr>
         `;
-      }
-      bodyWater += "</tbody>";
-      document.getElementById('table-water-comparison').innerHTML = headWater + bodyWater;
+        }
+        bodyWater += "</tbody>";
+        document.getElementById('table-water-comparison').innerHTML = headWater + bodyWater;
 
-      // 4. Tabla de Comparativa de Consumo de Energía Eléctrica Acumulada
-      let headEnergy = `
+        // 4. Tabla de Comparativa de Consumo de Energía Eléctrica Acumulada
+        let headEnergy = `
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Periodo de Amortización</th>
@@ -1670,12 +1820,12 @@
           </tr>
         </thead>
       `;
-      let bodyEnergy = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
-      for (let y = 0; y < years; y++) {
-        const accumTradEnergyCost = costYearTradAccum * (y + 1);
-        const accumPsaEnergyCost = costYearPsaAccum * (y + 1);
-        const accumEnergySavings = accumTradEnergyCost - accumPsaEnergyCost;
-        bodyEnergy += `
+        let bodyEnergy = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
+        for (let y = 0; y < years; y++) {
+          const accumTradEnergyCost = costYearTradAccum * (y + 1);
+          const accumPsaEnergyCost = costYearPsaAccum * (y + 1);
+          const accumEnergySavings = accumTradEnergyCost - accumPsaEnergyCost;
+          bodyEnergy += `
           <tr class="hover:bg-slate-50">
             <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1} (Acumulado)</td>
             <td class="p-2 text-orange-600 font-bold border-l">${formatBsDec(accumTradEnergyCost)}</td>
@@ -1683,12 +1833,12 @@
             <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">${formatBsDec(accumEnergySavings)}</td>
           </tr>
         `;
-      }
-      bodyEnergy += "</tbody>";
-      document.getElementById('table-energy-comparison').innerHTML = headEnergy + bodyEnergy;
+        }
+        bodyEnergy += "</tbody>";
+        document.getElementById('table-energy-comparison').innerHTML = headEnergy + bodyEnergy;
 
-      // 5. Tabla de Comparativa de Consumo de Energía Eléctrica Anualizada
-      let headEnergyYearly = `
+        // 5. Tabla de Comparativa de Consumo de Energía Eléctrica Anualizada
+        let headEnergyYearly = `
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Periodo Anual</th>
@@ -1698,12 +1848,12 @@
           </tr>
         </thead>
       `;
-      let bodyEnergyYearly = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
-      for (let y = 0; y < years; y++) {
-        const annualTradEnergyCost = costYearTradAccum;
-        const annualPsaEnergyCost = costYearPsaAccum;
-        const annualEnergySavings = annualTradEnergyCost - annualPsaEnergyCost;
-        bodyEnergyYearly += `
+        let bodyEnergyYearly = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
+        for (let y = 0; y < years; y++) {
+          const annualTradEnergyCost = costYearTradAccum;
+          const annualPsaEnergyCost = costYearPsaAccum;
+          const annualEnergySavings = annualTradEnergyCost - annualPsaEnergyCost;
+          bodyEnergyYearly += `
           <tr class="hover:bg-slate-50">
             <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1}</td>
             <td class="p-2 text-orange-600 font-bold border-l">${formatBsDec(annualTradEnergyCost)}</td>
@@ -1711,10 +1861,12 @@
             <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">${formatBsDec(annualEnergySavings)}</td>
           </tr>
         `;
+        }
+        bodyEnergyYearly += "</tbody>";
+        document.getElementById('table-energy-yearly-comparison').innerHTML = headEnergyYearly + bodyEnergyYearly;
       }
-      bodyEnergyYearly += "</tbody>";
-      document.getElementById('table-energy-yearly-comparison').innerHTML = headEnergyYearly + bodyEnergyYearly;
     }
+
 
     // --- RENDER DE TABLA PROFORMA / COTIZACIÓN DETALLADA (MODIFICADA) ---
     function renderProformaTable(activeProducts, invoiced) {
