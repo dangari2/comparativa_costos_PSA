@@ -45,8 +45,42 @@
       /* Oculta las flechas en Firefox */
     }
 
+    /* Ajustes Críticos de Color de Fondo para Gráficos */
+    .bg-water-energy-screen {
+      background-color: #fff7ed !important;
+      /* Naranja clarito */
+      border-color: #fed7aa !important;
+    }
+
+    .bg-water-only-screen {
+      background-color: #f0f9ff !important;
+      /* Celeste clarito distintivo */
+      border-color: #bae6fd !important;
+    }
+
     /* Estructuración Crítica para Impresión (Exportar PDF) */
     @media print {
+
+      /* Fuerza al motor de renderizado PDF a imprimir los fondos */
+      .print-exact-colors {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .bg-water-energy-screen {
+        background-color: #fff7ed !important;
+      }
+
+      .bg-water-only-screen {
+        background-color: #f0f9ff !important;
+      }
+
+      /* Obliga al elemento a iniciar en una página nueva */
+      .force-page-break {
+        page-break-before: always !important;
+        break-before: page !important;
+      }
+
       body {
         background-color: white !important;
         color: #1e293b !important;
@@ -380,18 +414,18 @@
 
           <!-- NUEVO GRÁFICO 0: GRAN TOTAL ACUMULADO (AGUA + ENERGÍA) -->
           <div id="container-chart-grand-total"
-            class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300 break-inside-avoid">
+            class="bg-water-energy-screen print-exact-colors p-6 rounded-xl shadow-sm border break-inside-avoid">
             <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Presupuesto Acumulado (Agua +
               Energía)</h3>
-            <div class="h-80 w-full relative">
+            <div class="h-80 print:h-64 w-full relative">
               <canvas id="chart-grand-total"></canvas>
             </div>
           </div>
 
 
           <!-- GRÁFICO 1: EVOLUCIÓN ACUMULADA -->
-          <div
-            class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300 break-inside-avoid">
+          <div id="container-chart-accumulated"
+            class="bg-water-only-screen print-exact-colors p-6 rounded-xl shadow-sm border break-inside-avoid">
             <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Presupuesto Acumulado (Solo
               Agua)</h3>
             <div class="h-80 w-full relative">
@@ -413,8 +447,8 @@
           </div>
 
           <!-- GRÁFICO 2: COSTO ANUAL -->
-          <div
-            class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300 break-inside-avoid">
+          <div id="container-chart-yearly"
+            class="bg-water-only-screen print-exact-colors force-page-break p-6 rounded-xl shadow-sm border break-inside-avoid">
             <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Costos Operativos Anualizados
               (Inversión vs Gasto vs Ahorro)</h3>
             <div class="h-80 w-full relative">
@@ -436,8 +470,8 @@
           </div>
 
           <!-- GRÁFICO 3: COMPARATIVA DE CAPACIDAD HÍDRICA -->
-          <div
-            class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300 break-inside-avoid">
+          <div id="container-chart-water"
+            class="bg-water-only-screen print-exact-colors force-page-break p-6 rounded-xl shadow-sm border break-inside-avoid">
             <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Rendimiento Técnico de
               Purificación Disponible vs Consumo</h3>
             <div class="h-80 w-full relative">
@@ -461,7 +495,7 @@
 
           <!-- GRÁFICO 4: EFICIENCIA ENERGÉTICA ACUMULADA -->
           <div id="container-chart-energy-accumulated"
-            class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300 break-inside-avoid">
+            class="bg-water-energy-screen print-exact-colors force-page-break p-6 rounded-xl shadow-sm border break-inside-avoid">
             <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Análisis de Consumo Eléctrico
               Acumulado (CRE)</h3>
             <div class="h-80 w-full relative">
@@ -483,8 +517,8 @@
           </div>
 
           <!-- GRÁFICO 5: EFICIENCIA ENERGÉTICA ANUAL -->
-          <div id="container-chart-energy-yearly" class=" bg-white p-6 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300
-            break-inside-avoid">
+          <div id="container-chart-energy-yearly"
+            class="bg-water-energy-screen print-exact-colors force-page-break p-6 rounded-xl shadow-sm border break-inside-avoid">
             <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Análisis de Consumo Eléctrico
               Anual (Costos del Año - CRE)</h3>
             <div class="h-80 w-full relative">
@@ -1581,31 +1615,36 @@
 
 
 
-      // ASIGNAR IDs A LOS CONTENEDORES EN TU HTML:
-      // Asegúrate de que los <div> que envuelven los <canvas> de energía 
-      // tengan un ID para poder ocultarlos, ej: id="container-chart-energy-accumulated"
-
+      // ASIGNACIÓN DE CONTENEDORES
       const containerEnergyAcc = document.getElementById('container-chart-energy-accumulated');
       const containerEnergyYearly = document.getElementById('container-chart-energy-yearly');
-      const containerGrandTotal = document.getElementById('container-chart-grand-total'); // Nuevo
+      const containerGrandTotal = document.getElementById('container-chart-grand-total');
+      const containerAccumulated = document.getElementById('container-chart-accumulated'); // <- Requerido para dinámica
 
       if (!calc.hasEnergyCalc) {
-        // 1. Ocultar los contenedores del DOM
+        // 1. Ocultar los contenedores de energía
         if (containerEnergyAcc) containerEnergyAcc.classList.add('hidden');
         if (containerEnergyYearly) containerEnergyYearly.classList.add('hidden');
-        if (containerGrandTotal) containerGrandTotal.classList.add('hidden'); // Se oculta porque es redundante con el de agua
+        if (containerGrandTotal) containerGrandTotal.classList.add('hidden');
 
-        // 2. Destruir las instancias
+        // 2. EVITAR SALTO: Al no existir el Gráfico 0, el Gráfico 1 se queda en la primera hoja.
+        if (containerAccumulated) containerAccumulated.classList.remove('force-page-break');
+
+        // 3. Destruir las instancias
         if (typeof chartEnergyInstance !== 'undefined' && chartEnergyInstance) chartEnergyInstance.destroy();
         if (typeof chartEnergyYearlyInstance !== 'undefined' && chartEnergyYearlyInstance) chartEnergyYearlyInstance.destroy();
         if (typeof chartGrandTotalInstance !== 'undefined' && chartGrandTotalInstance) chartGrandTotalInstance.destroy();
 
       } else {
-        // 1. Mostrar los contenedores
+        // 1. Mostrar los contenedores de energía
         if (containerEnergyAcc) containerEnergyAcc.classList.remove('hidden');
         if (containerEnergyYearly) containerEnergyYearly.classList.remove('hidden');
-        if (containerGrandTotal) containerGrandTotal.classList.remove('hidden'); // Nuevo
-        // 2. Aquí va todo tu código normal de Chart.js para generar:
+        if (containerGrandTotal) containerGrandTotal.classList.remove('hidden');
+
+        // 2. FORZAR SALTO: Como el Gráfico 0 ocupará la primera hoja, forzamos al Gráfico 1 a la hoja 2.
+        if (containerAccumulated) containerAccumulated.classList.add('force-page-break');
+
+        // ... (Aquí continúa el resto de tu código normal de configuración de chartEnergyInstance y chartEnergyYearlyInstance)
         // - El gráfico de Consumo Eléctrico Acumulado (CRE)
         // - El gráfico de Consumo Eléctrico Anual (Costos del Año - CRE)
 
