@@ -368,16 +368,17 @@
           </div>
 
           <div class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200 text-xs">
-            <h3 class="font-bold text-slate-700 uppercase tracking-wider mb-2">Datos Para la Proyección</h3>
+            <h3 class="font-bold text-slate-700 uppercase tracking-wider mb-2">Situación Actual con Agua Embotellada
+            </h3>
             <div class="grid grid-cols-4 gap-4">
               <div><span class="text-slate-400 block uppercase text-[10px]">Consumo Semanal</span><span
                   id="p-print-bottles" class="font-bold text-slate-800"></span></div>
-              <div><span class="text-slate-400 block uppercase text-[10px]">Costo por Unidad</span><span
-                  id="p-print-cost" class="font-bold text-slate-800"></span></div>
-              <div><span class="text-slate-400 block uppercase text-[10px]">Volumen Proyectado</span><span
-                  id="p-print-volume" class="font-bold text-slate-800"></span></div>
-              <div><span class="text-slate-400 block uppercase text-[10px]">Proyección</span><span id="p-print-years"
+              <div><span class="text-slate-400 block uppercase text-[10px]">Costo Unitario</span><span id="p-print-cost"
                   class="font-bold text-slate-800"></span></div>
+              <div><span class="text-slate-400 block uppercase text-[10px]">Rendimiento</span><span id="p-print-volume"
+                  class="font-bold text-slate-800"></span></div>
+              <div><span class="text-slate-400 block uppercase text-[10px]">Proyección de Estudio</span><span
+                  id="p-print-years" class="font-bold text-slate-800"></span></div>
             </div>
           </div>
         </div>
@@ -412,21 +413,12 @@
             <!-- Inyectado dinámicamente -->
           </div>
 
-          <!-- NUEVO GRÁFICO 0: GRAN TOTAL ACUMULADO (AGUA + ENERGÍA) -->
-          <div id="container-chart-grand-total"
-            class="bg-water-energy-screen print-exact-colors p-6 rounded-xl shadow-sm border break-inside-avoid">
-            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Presupuesto Acumulado (Agua +
-              Energía)</h3>
-            <div class="h-80 print:h-64 w-full relative">
-              <canvas id="chart-grand-total"></canvas>
-            </div>
-          </div>
-
 
           <!-- GRÁFICO 1: EVOLUCIÓN ACUMULADA -->
           <div id="container-chart-accumulated"
             class="bg-water-only-screen print-exact-colors p-6 rounded-xl shadow-sm border break-inside-avoid">
-            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Presupuesto Acumulado (Solo
+            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">GRÁFICO 1. Proyección de
+              Presupuesto ACUMULADO (Solo
               Agua)</h3>
             <div class="h-80 w-full relative">
               <canvas id="chart-accumulated"></canvas>
@@ -436,7 +428,7 @@
             <div class="mt-8 border border-slate-200 rounded-lg overflow-hidden print:border-slate-300">
               <div
                 class="bg-slate-50 p-3 border-b border-slate-200 print:bg-white print:border-b-2 print:border-slate-800">
-                <h4 class="font-bold text-xs text-slate-700">Flujo de Caja Consolidado (Anual)</h4>
+                <h4 class="font-bold text-xs text-slate-700">TABLA 1. (Fuente de datos del GRÁFICO 1)</h4>
               </div>
               <div class="overflow-x-auto">
                 <table id="table-acc-yearly" class="w-full text-[11px] md:text-xs text-left">
@@ -449,8 +441,8 @@
           <!-- GRÁFICO 2: COSTO ANUAL -->
           <div id="container-chart-yearly"
             class="bg-water-only-screen print-exact-colors force-page-break p-6 rounded-xl shadow-sm border break-inside-avoid">
-            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Costos Operativos Anualizados
-              (Inversión vs Gasto vs Ahorro)</h3>
+            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2"> GRÁFICO 2. Proyección de
+              Presupuesto ANUAL (Agua)</h3>
             <div class="h-80 w-full relative">
               <canvas id="chart-yearly"></canvas>
             </div>
@@ -459,7 +451,7 @@
             <div class="mt-8 border border-slate-200 rounded-lg overflow-hidden print:border-slate-300">
               <div
                 class="bg-slate-50 p-3 border-b border-slate-200 print:bg-white print:border-b-2 print:border-slate-800">
-                <h4 class="font-bold text-xs text-slate-700">Inversión y Capex de Mantenimiento por Año</h4>
+                <h4 class="font-bold text-xs text-slate-700">TABLA 2. (Fuente de datos del GRÁFICO 2)</h4>
               </div>
               <div class="overflow-x-auto">
                 <table id="table-yearly-gains" class="w-full text-[11px] md:text-xs text-left">
@@ -472,8 +464,8 @@
           <!-- GRÁFICO 3: COMPARATIVA DE CAPACIDAD HÍDRICA -->
           <div id="container-chart-water"
             class="bg-water-only-screen print-exact-colors force-page-break p-6 rounded-xl shadow-sm border break-inside-avoid">
-            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Rendimiento Técnico de
-              Purificación Disponible vs Consumo</h3>
+            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">GRÁFICO 3. Proyección de
+              Rendimiento ANUAL (Agua)</h3>
             <div class="h-80 w-full relative">
               <canvas id="chart-water"></canvas>
             </div>
@@ -482,8 +474,7 @@
             <div class="mt-8 border border-slate-200 rounded-lg overflow-hidden print:border-slate-300">
               <div
                 class="bg-slate-50 p-3 border-b border-slate-200 print:bg-white print:border-b-2 print:border-slate-800">
-                <h4 class="font-bold text-xs text-slate-700">Rendimiento de Purificadores PSA Vs Gasto en Bidones
-                  (Litros/Año)</h4>
+                <h4 class="font-bold text-xs text-slate-700">TABLA 3. (Fuente de datos del GRÁFICO 3)</h4>
               </div>
               <div class="overflow-x-auto">
                 <table id="table-water-comparison" class="w-full text-[11px] md:text-xs text-left">
@@ -496,8 +487,8 @@
           <!-- GRÁFICO 4: EFICIENCIA ENERGÉTICA ACUMULADA -->
           <div id="container-chart-energy-accumulated"
             class="bg-water-energy-screen print-exact-colors force-page-break p-6 rounded-xl shadow-sm border break-inside-avoid">
-            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Análisis de Consumo Eléctrico
-              Acumulado (CRE)</h3>
+            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">GRÁFICO 4. Proyección de
+              Presupuesto ACUMULADO (Energía Eléctrica)</h3>
             <div class="h-80 w-full relative">
               <canvas id="chart-energy"></canvas>
             </div>
@@ -506,7 +497,7 @@
             <div class="mt-8 border border-slate-200 rounded-lg overflow-hidden print:border-slate-300">
               <div
                 class="bg-slate-50 p-3 border-b border-slate-200 print:bg-white print:border-b-2 print:border-slate-800">
-                <h4 class="font-bold text-xs text-slate-700">Detalle de Costo de Energía Eléctrica Acumulada (Bs.)</h4>
+                <h4 class="font-bold text-xs text-slate-700">TABLA 4. (Fuente de datos del GRÁFICO 4)</h4>
               </div>
               <div class="overflow-x-auto">
                 <table id="table-energy-comparison" class="w-full text-[11px] md:text-xs text-left">
@@ -519,8 +510,8 @@
           <!-- GRÁFICO 5: EFICIENCIA ENERGÉTICA ANUAL -->
           <div id="container-chart-energy-yearly"
             class="bg-water-energy-screen print-exact-colors force-page-break p-6 rounded-xl shadow-sm border break-inside-avoid">
-            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">Análisis de Consumo Eléctrico
-              Anual (Costos del Año - CRE)</h3>
+            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">GRÁFICO 5. Proyección de
+              Presupuesto ANUAL (Energía Eléctrica)</h3>
             <div class="h-80 w-full relative">
               <canvas id="chart-energy-yearly"></canvas>
             </div>
@@ -529,13 +520,24 @@
             <div class="mt-8 border border-slate-200 rounded-lg overflow-hidden print:border-slate-300">
               <div
                 class="bg-slate-50 p-3 border-b border-slate-200 print:bg-white print:border-b-2 print:border-slate-800">
-                <h4 class="font-bold text-xs text-slate-700">Detalle de Costo de Energía Eléctrica Anual (Bs./Año)</h4>
+                <h4 class="font-bold text-xs text-slate-700">TABLA 5. (Fuente de datos del GRÁFICO 5)</h4>
               </div>
               <div class="overflow-x-auto">
                 <table id="table-energy-yearly-comparison" class="w-full text-[11px] md:text-xs text-left">
                   <!-- Generada dinámicamente -->
                 </table>
               </div>
+            </div>
+          </div>
+
+          <!-- NUEVO GRÁFICO 6: GRAN TOTAL ACUMULADO (AGUA + ENERGÍA) print:h-64 -->
+          <div id="container-chart-grand-total"
+            class="bg-water-energy-screen print-exact-colors force-page-break p-6 rounded-xl shadow-sm border break-inside-avoid">
+            <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2">GRÁFICO 6. Proyección de
+              Presupuesto ACUMULADO (Agua +
+              Energía Eléctrica)</h3>
+            <div class="h-80  w-full relative">
+              <canvas id="chart-grand-total"></canvas>
             </div>
           </div>
 
@@ -546,8 +548,7 @@
           <div
             class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300 break-inside-avoid">
             <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2 flex items-center gap-2">
-              <i data-lucide="receipt" class="w-5 h-5 text-blue-600"></i> Detalle de Cotización de Equipamiento
-              Propuesto
+              <i data-lucide="receipt" class="w-5 h-5 text-blue-600"></i> Propuesta A. Cotización Unitaria
             </h3>
             <div class="overflow-x-auto">
               <table class="w-full text-xs md:text-sm text-left">
@@ -562,7 +563,8 @@
                     <th class="p-3 text-right w-28">Total Parcial</th>
                   </tr>
                 </thead>
-                <tbody id="proforma-table-body" class="divide-y divide-slate-100">
+                <tbody id="proforma-table-body"
+                  class="divide-y divide-slate-100 [&>tr:nth-child(even)]:bg-slate-50 [&>tr:hover]:bg-blue-50/60 transition-colors print:[&>tr:nth-child(even)]:bg-transparent print:divide-black">
                 </tbody>
               </table>
             </div>
@@ -948,6 +950,8 @@
   </div>
 
   <script>
+    const apiKey = "AQ.Ab8RN6Jhzo_dtSC1QPWpK7WYcv3oNUt_XV1DqCxR9e1MIV6P-Q"; // Gemini API Key (Reemplazar con la clave real)
+
     // --- DATABASE MOCK (LOCALSTORAGE) ---
     const DEFAULT_PRODUCTS = [
       { id: "prod_001", name: "Dispenser PSA Eco-D Empresarial", details: "Agua pura fría/caliente, purificación avanzada de alto rendimiento y flujo continuo.", image: "./FOTOS/PSA-Eco-D_Pie.png", basePrice: 12550, performance: 80000, usefulLife: 10, warranty: "2 años", maintenanceCost: 604, maintenanceFrequency: 12, installationCost: 610, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString() },
@@ -1096,7 +1100,7 @@
 
       let accPsaWater = 0, accTradWater = 0;
       let accPsaTotal = 0, accTradTotal = 0;
-      let roiMonth = null;
+      let paybackMonth = null;
       const monthlyData = [];
       const yearlyData = [];
 
@@ -1140,9 +1144,9 @@
         simAccTradTotal += tradMonthCostTotal;
         simAccPsaTotal += psaMonthCostTotal;
 
-        // ROI basado en el Gran Total de Ahorro
-        if (roiMonth === null && simAccPsaTotal < simAccTradTotal) {
-          roiMonth = m;
+        // Payback basado en el Gran Total de Ahorro
+        if (paybackMonth === null && simAccPsaTotal < simAccTradTotal) {
+          paybackMonth = m;
         }
 
         if (m <= months) {
@@ -1181,16 +1185,34 @@
       const totalWaterLiters = bottlesPerWeek * 52 * years * bottleCap;
       const totalPsaCapacity = activeProducts.reduce((sum, item) => sum + (item.product.performance * item.quantity), 0);
 
+      // NUEVOS CÁLCULOS FINANCIEROS (CAPEX, OPEX, ROI)
+      // 1. CAPEX ya lo tienes: es totalInitialCost
+      const capex = totalInitialCost;
+
+      // 2. OPEX Total (Todo el gasto de PSA menos la inversión inicial)
+      const opexTotal = accPsaTotal - capex;
+      const opexAnualPromedio = opexTotal / years;
+
+      // 3. Ahorro Neto (Beneficio de la inversión)
+      const ahorroNeto = accTradTotal - accPsaTotal;
+
+      // 4. ROI (%) = (Beneficio Neto / Inversión) * 100
+      // Validamos que el capex sea mayor a 0 para evitar divisiones entre cero
+      const roiPercentage = capex > 0 ? (ahorroNeto / capex) * 100 : 0;
+
       return {
         hasEnergyCalc,
-        initialCost: totalInitialCost,
-        totalPsaCost: accPsaWater,     // Se mantiene solo agua para los cuadros antiguos
-        totalTradCost: accTradWater,   // Se mantiene solo agua para los cuadros antiguos
+        initialCost: capex, // CAPEX
+        opexTotal,          // OPEX Acumulado
+        opexAnualPromedio,  // OPEX Promedio Anual
+        totalPsaCost: accPsaWater,
+        totalTradCost: accTradWater,
         totalSavings: accTradWater - accPsaWater,
-        grandTotalPsaCost: accPsaTotal,      // Nuevos datos para cuadros globales
+        grandTotalPsaCost: accPsaTotal,
         grandTotalTradCost: accTradTotal,
-        grandTotalSavings: accTradTotal - accPsaTotal,
-        roiMonth,
+        grandTotalSavings: ahorroNeto,
+        paybackMonth,       // PRI (Meses)
+        roiPercentage,      // ROI Real (%)
         costPerLiterTrad: accTradWater / totalWaterLiters,
         costPerLiterPsa: accPsaWater / totalPsaCapacity,
         monthlyData,
@@ -1296,7 +1318,7 @@
       const grandTotalSavings = totalWaterSavings + totalEnergySavingsAccumulated;
 
       // Renderizado dinámico de textos y etiquetas
-      const textContext = hasEnergyCalc ? `Proyección a ${years} años (Agua + Energía CRE)` : `Proyección a ${years} años (Solo Agua)`;
+      const textContext = hasEnergyCalc ? `Proyección a ${years} años (Agua + Energía Electrica)` : `Proyección a ${years} años (Solo Agua)`;
       const energyBadge = hasEnergyCalc ? `<span class="bg-black/20 px-2 py-0.5 rounded">⚡ Energía: ${formatBs(totalEnergySavingsAccumulated)}</span>` : '';
 
       area.innerHTML = `
@@ -1306,7 +1328,7 @@
           <i data-lucide="trending-up" class="w-8 h-8"></i>
         </div>
         <div>
-          <h3 class="font-black text-xl lg:text-2xl tracking-tight">Gran Total de Ahorro Consolidado</h3>
+          <h3 class="font-black text-xl lg:text-2xl tracking-tight">Total de Ahorro</h3>
           <p class="text-emerald-100 text-sm font-medium">${textContext}</p>
         </div>
       </div>
@@ -1326,7 +1348,7 @@
 
     // --- RENDER COMPARATIVE TABLE (CONSOLIDATED STUDY) ---
     function renderComparativeTable(calc, params) {
-      const rowOperatingBudget = calc.hasEnergyCalc ? "Presupuesto Operativo (Agua + Energía CRE)" : "Presupuesto Operativo (Solo Agua)";
+      const rowOperatingBudget = calc.hasEnergyCalc ? "Presupuesto (Agua + Energía Electrica)" : "Presupuesto (Solo Agua)";
       document.getElementById('table-comparison-title').innerText = `Comparativa Técnica y Económica a ${params.years} Años`;
 
       // Lógica dinámica de rentabilidad
@@ -1341,19 +1363,19 @@
       let html = `
         <thead class="bg-blue-800 text-white border-b print:bg-slate-100 print:text-slate-900 text-xs uppercase font-bold">
           <tr>
-            <th class="p-3 w-1/2">Indicador de Rendimiento</th>
-            <th class="p-3 border-l text-center">Gasto Actual Proyectado</th>
-            <th class="p-3 border-l text-center">Alternativa Consolidada PSA</th>
+            <th class="p-3 w-1/2">Indicadores Financieros y Operativos</th>
+            <th class="p-3 border-l text-center">Situación Actual</th>
+            <th class="p-3 border-l text-center">Proyecto PSA</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100 text-xs md:text-sm">
           <tr class="hover:bg-slate-50/50">
-            <td class="p-3 font-semibold text-slate-600">${rowOperatingBudget}</td>
+            <td class="p-3 font-semibold text-slate-600">Gasto Total Proyectado a ${params.years} años</td>
             <td class="p-3 font-bold text-red-600 border-l text-center">${formatBs(calc.grandTotalTradCost)}</td>
             <td class="p-3 font-bold text-emerald-600 border-l text-center">${formatBs(calc.grandTotalPsaCost)}</td>
           </tr>
           <tr class="bg-slate-50/50 hover:bg-slate-50">
-            <td class="p-3 font-black text-slate-800">Ahorro Neto Real Consolidado</td>
+            <td class="p-3 font-black text-slate-800">Ahorro Neto (Beneficio del Proyecto)</td>
             <td class="p-3 text-slate-400 border-l text-center">-</td>
             <td class="p-3 font-black ${savingsText} border-l text-center ${savingsBg}">
               <div class="flex flex-col items-center justify-center">
@@ -1363,19 +1385,24 @@
             </td>
           </tr>
           <tr class="hover:bg-slate-50">
-            <td class="p-3 font-semibold text-slate-600">Inversión Tecnológica Inicial Amortizable</td>
+            <td class="p-3 font-semibold text-slate-600">CAPEX (Inversión Inicial en Activos)</td>
             <td class="p-3 text-slate-400 border-l text-center">-</td>
             <td class="p-3 text-slate-700 border-l text-center font-bold">${formatBs(calc.initialCost)}</td>
           </tr>
-          <tr class="bg-slate-50/50 hover:bg-slate-50">
-            <td class="p-3 font-semibold text-slate-600">Retorno de Inversión (PRI)</td>
-            <td class="p-3 text-slate-400 border-l text-center">-</td>
-            <td class="p-3 text-violet-700 font-black border-l text-center text-base">${calc.roiMonth ? `${calc.roiMonth} meses` : (isProfitable ? 'Inmediato / Menor a 1 mes' : 'No se recupera la inversión')}</td>
-          </tr>
           <tr class="hover:bg-slate-50">
-            <td class="p-3 font-semibold text-slate-600">Costo Equivalente por Litro de Agua</td>
-            <td class="p-3 text-red-600 border-l text-center font-semibold">${formatBsPerLiter(calc.costPerLiterTrad)}</td>
-            <td class="p-3 text-emerald-700 font-black border-l text-center">${formatBsPerLiter(calc.costPerLiterPsa)}</td>
+            <td class="p-3 font-semibold text-slate-600">OPEX (Promedio Anual: Operación, Energía y Mantenimiento)</td>
+            <td class="p-3 text-slate-400 border-l text-center">N/A</td>
+            <td class="p-3 text-slate-700 border-l text-center font-bold">${formatBs(calc.opexAnualPromedio)} / año</td>
+          </tr>
+          <tr class="bg-slate-50/50 hover:bg-slate-50">
+            <td class="p-3 font-semibold text-slate-600">PRI (Período de Recuperación de Inversión / Payback)</td>
+            <td class="p-3 text-slate-400 border-l text-center">-</td>
+            <td class="p-3 text-violet-700 font-black border-l text-center text-base">${calc.paybackMonth ? `${calc.paybackMonth} meses` : 'No recupera'}</td>
+          </tr>
+          <tr class="bg-slate-50/50 hover:bg-slate-50">
+            <td class="p-3 font-semibold text-slate-600">ROI (Retorno sobre la Inversión a ${params.years} años)</td>
+            <td class="p-3 text-slate-400 border-l text-center">-</td>
+            <td class="p-3 text-emerald-700 font-black border-l text-center text-base">${formatNum(calc.roiPercentage.toFixed(0))}%</td>
           </tr>
         </tbody>
       `;
@@ -1392,24 +1419,24 @@
         <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300 break-inside-avoid">
           <h4 class="font-black text-slate-800 mb-4 flex items-center gap-2 border-b pb-2 uppercase tracking-wide text-xs md:text-sm">
             <span class="w-3.5 h-3.5 rounded-full bg-blue-600"></span>
-            Análisis de Impacto Financiero Global (${totalUnits} Equipos PSA Integrados en la Solución)
+            Análisis de Rentabilidad Financiera (${totalUnits} Equipos PSA)
           </h4>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-red-50 p-4 rounded-lg border border-red-100 print:border-red-200">
-              <div class="text-red-500 text-[10px] font-bold uppercase tracking-wider mb-1">Gasto Actual (Total)</div>
-              <div class="text-lg md:text-xl font-black text-red-600">${formatBs(calc.grandTotalTradCost)}</div>
-            </div>
-            <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100 print:border-emerald-200">
-              <div class="text-emerald-600 text-[10px] font-bold uppercase tracking-wider mb-1">Costo Solución PSA (Total)</div>
-              <div class="text-lg md:text-xl font-black text-emerald-700">${formatBs(calc.grandTotalPsaCost)}</div>
+            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 print:border-slate-300">
+              <div class="text-slate-600 text-[10px] font-bold uppercase tracking-wider mb-1">CAPEX (Inversión Inicial)</div>
+              <div class="text-lg md:text-xl font-black text-slate-800">${formatBs(calc.initialCost)}</div>
             </div>
             <div class="p-4 rounded-lg border ${hasAhorro ? 'bg-emerald-50 border-emerald-100' : 'bg-red-50 border-red-100'}">
-              <div class="text-[10px] font-bold uppercase tracking-wider mb-1 ${hasAhorro ? 'text-emerald-700' : 'text-red-600'}">Ahorro Neto Estimado</div>
+              <div class="text-[10px] font-bold uppercase tracking-wider mb-1 ${hasAhorro ? 'text-emerald-700' : 'text-red-600'}">Ahorro Neto Generado</div>
               <div class="text-lg md:text-xl font-black ${hasAhorro ? 'text-emerald-600' : 'text-red-500'}">${formatBs(calc.grandTotalSavings)}</div>
             </div>
             <div class="bg-violet-50 p-4 rounded-lg border border-violet-100 print:border-violet-200">
-              <div class="text-violet-600 text-[10px] font-bold uppercase tracking-wider mb-1">Retorno de Inversión</div>
-              <div class="text-lg md:text-xl font-black text-violet-700">${calc.roiMonth ? `${calc.roiMonth} Meses` : 'No alcanza'}</div>
+              <div class="text-violet-600 text-[10px] font-bold uppercase tracking-wider mb-1">PRI (Payback Period)</div>
+              <div class="text-lg md:text-xl font-black text-violet-700">${calc.paybackMonth ? `${calc.paybackMonth} Meses` : 'No alcanza'}</div>
+            </div>
+            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 print:border-blue-200">
+              <div class="text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-1">ROI (Retorno de Inversión)</div>
+              <div class="text-lg md:text-xl font-black text-blue-700">${formatNum(calc.roiPercentage.toFixed(0))}%</div>
             </div>
           </div>
         </div>
@@ -1425,7 +1452,7 @@
       // Dataset 0: GRAN TOTAL ACUMULADO (Agua + Energía)
       const datasetsGrandTotal = [
         {
-          label: "Gasto Operacional Proyectado (Agua + Energía)",
+          label: "Gasto Actual",
           data: calc.yearlyData.map(d => d.accTradTotal),
           borderColor: "#f97316", // Naranja para distinguirlo visualmente
           backgroundColor: "rgba(249, 115, 22, 0.1)",
@@ -1435,7 +1462,7 @@
           tension: 0.1
         },
         {
-          label: "Inversión y Gasto PSA (Agua + Energía)",
+          label: "Inversión PSA",
           data: calc.yearlyData.map(d => d.accPsaTotal),
           borderColor: "#3b82f6", // Azul 
           backgroundColor: "rgba(59, 130, 246, 0.1)",
@@ -1445,7 +1472,7 @@
           tension: 0.1
         },
         {
-          label: "Ahorro Neto Real Consolidado",
+          label: "Ahorro Neto",
           data: calc.yearlyData.map(d => Math.max(0, d.accTradTotal - d.accPsaTotal)),
           borderColor: "#10b981", // Verde
           borderWidth: 2,
@@ -1477,7 +1504,7 @@
       // Dataset 1: Acumulado Anualizado Consolidado
       const datasetsAcc = [
         {
-          label: "Bidones (Gasto Acumulado)",
+          label: "Gasto en Bidones",
           data: calc.yearlyData.map(d => d.accTrad),
           borderColor: "#ef4444",
           backgroundColor: "rgba(239, 68, 68, 0.1)",
@@ -1488,7 +1515,7 @@
           tension: 0.1
         },
         {
-          label: "Equipamiento PSA (Gasto Acumulado)",
+          label: "Inversión PSA",
           data: calc.yearlyData.map(d => d.accPsa),
           borderColor: "#3b82f6",
           backgroundColor: "rgba(59, 130, 246, 0.1)",
@@ -1499,7 +1526,7 @@
           tension: 0.1
         },
         {
-          label: "Ahorro Real Acumulado",
+          label: "Ahorro",
           data: calc.yearlyData.map(d => Math.max(0, d.accTrad - d.accPsa)),
           borderColor: "#10b981",
           borderWidth: 2,
@@ -1531,19 +1558,19 @@
       // Dataset 2: Barras Anuales Consolidadas
       const datasetsYearly = [
         {
-          label: "Gasto en Bidones (Anual)",
+          label: "Gasto en Bidones",
           data: calc.yearlyData.map(d => d.tradYearCost),
           backgroundColor: "#ef4444",
           borderRadius: 4
         },
         {
-          label: "Inversión/Operación PSA (Anual)",
+          label: "Inversión PSA",
           data: calc.yearlyData.map(d => d.psaYearCost),
           backgroundColor: "#3b82f6",
           borderRadius: 4
         },
         {
-          label: "Ahorro del Año",
+          label: "Ahorro",
           data: calc.yearlyData.map(d => d.savings),
           backgroundColor: "#10b981",
           borderRadius: 4
@@ -1579,13 +1606,13 @@
 
       const datasetsWater = [
         {
-          label: "Demanda Real de Agua en Bidones",
+          label: "Agua en Bidones",
           data: Array(years).fill(annualTradLiters),
           backgroundColor: "#ef4444",
           borderRadius: 4
         },
         {
-          label: "Capacidad Técnica Disponible (PSA)",
+          label: "Agua PSA",
           data: Array(years).fill(consolidatedPsaYield),
           backgroundColor: "#3b82f6",
           borderRadius: 4
@@ -1673,7 +1700,7 @@
 
         const datasetsEnergy = [
           {
-            label: "Dispensadores Actuales (Energía)",
+            label: "Dispenser Actual",
             data: labelsYears.map((_, i) => costYearTradAccum * (i + 1)),
             borderColor: "#f97316",
             backgroundColor: "rgba(249, 115, 22, 0.1)",
@@ -1683,7 +1710,7 @@
             tension: 0.1
           },
           {
-            label: "Dispensadores PSA Propuestos (Energía)",
+            label: "Dispenser PSA",
             data: labelsYears.map((_, i) => costYearPsaAccum * (i + 1)),
             borderColor: "#3b82f6",
             backgroundColor: "rgba(59, 130, 246, 0.1)",
@@ -1693,7 +1720,7 @@
             tension: 0.1
           },
           {
-            label: "Ahorro Energético Acumulado (CRE)",
+            label: "Ahorro",
             data: labelsYears.map((_, i) => (costYearTradAccum - costYearPsaAccum) * (i + 1)),
             borderColor: "#10b981",
             borderWidth: 2,
@@ -1725,19 +1752,19 @@
         // Dataset 5: Análisis de Eficiencia Energética Anualizada
         const datasetsEnergyYearly = [
           {
-            label: "Gasto Energía Actual (Anual)",
+            label: "Dispenser Actual",
             data: Array(years).fill(costYearTradAccum),
             backgroundColor: "#f97316",
             borderRadius: 4
           },
           {
-            label: "Gasto Energía PSA (Anual)",
+            label: "Dispenser PSA",
             data: Array(years).fill(costYearPsaAccum),
             backgroundColor: "#3b82f6",
             borderRadius: 4
           },
           {
-            label: "Ahorro Energético Anual (CRE)",
+            label: "Ahorro",
             data: Array(years).fill(costYearTradAccum - costYearPsaAccum),
             backgroundColor: "#10b981",
             borderRadius: 4
@@ -1773,9 +1800,9 @@
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Corte Operativo</th>
-            <th class="p-2 font-semibold border-l text-red-600 text-center">Gasto Tradicional Acum. (Bidones)</th>
-            <th class="p-2 font-semibold border-l text-blue-600 text-center">Gasto Solución PSA Consolidada Acum.</th>
-            <th class="p-2 font-semibold border-l text-emerald-600 text-center">Ahorro Real Acumulado</th>
+            <th class="p-2 font-semibold border-l text-red-600 text-center">Gasto en Bidones</th>
+            <th class="p-2 font-semibold border-l text-blue-600 text-center">Inversión PSA</th>
+            <th class="p-2 font-semibold border-l text-emerald-600 text-center">Ahorro</th>
           </tr>
         </thead>
       `;
@@ -1799,9 +1826,9 @@
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Período Anual</th>
-            <th class="p-2 font-semibold border-l text-red-600 text-center">Costo Tradicional Anual</th>
-            <th class="p-2 font-semibold border-l text-blue-600 text-center">Gasto Inversión/Op. PSA Anual</th>
-            <th class="p-2 font-semibold border-l text-emerald-600 text-center">Ahorro Neto del Año</th>
+            <th class="p-2 font-semibold border-l text-red-600 text-center">Gasto en Bidones</th>
+            <th class="p-2 font-semibold border-l text-blue-600 text-center">Inversión PSA</th>
+            <th class="p-2 font-semibold border-l text-emerald-600 text-center">Ahorro</th>
           </tr>
         </thead>
       `;
@@ -1825,8 +1852,8 @@
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Análisis de Suministro</th>
-            <th class="p-2 font-semibold border-l text-red-600 text-center">Demanda Acumulada en Bidones</th>
-            <th class="p-2 font-semibold border-l text-blue-600 text-center">Suministro Técnico Acumulado (PSA)</th>
+            <th class="p-2 font-semibold border-l text-red-600 text-center">Agua en Bidones</th>
+            <th class="p-2 font-semibold border-l text-blue-600 text-center">Agua PSA</th>
             <th class="p-2 font-semibold border-l text-emerald-600 text-center">Superávit Hídrico Acumulado</th>
           </tr>
         </thead>
@@ -1838,7 +1865,7 @@
           const surplus = cumulativeYield - cumulativeDemand;
           bodyWater += `
           <tr class="hover:bg-slate-50">
-            <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1} (Acumulado)</td>
+            <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1} </td>
             <td class="p-2 text-red-600 font-bold border-l">${formatNum(Math.round(cumulativeDemand))} L</td>
             <td class="p-2 text-blue-600 font-bold border-l">${formatNum(Math.round(cumulativeYield))} L</td>
             <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">+${formatNum(Math.round(surplus))} L</td>
@@ -1853,9 +1880,9 @@
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Periodo de Amortización</th>
-            <th class="p-2 font-semibold border-l text-orange-600 text-center">Costo Energía Dispensadores Actuales</th>
-            <th class="p-2 font-semibold border-l text-blue-600 text-center">Costo Energía Dispensadores PSA</th>
-            <th class="p-2 font-semibold border-l text-emerald-600 text-center">Ahorro Energético Acumulado (CRE)</th>
+            <th class="p-2 font-semibold border-l text-orange-600 text-center">Dispenser Actual</th>
+            <th class="p-2 font-semibold border-l text-blue-600 text-center">Dispenser PSA</th>
+            <th class="p-2 font-semibold border-l text-emerald-600 text-center">Ahorro Energético</th>
           </tr>
         </thead>
       `;
@@ -1866,7 +1893,7 @@
           const accumEnergySavings = accumTradEnergyCost - accumPsaEnergyCost;
           bodyEnergy += `
           <tr class="hover:bg-slate-50">
-            <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1} (Acumulado)</td>
+            <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1} </td>
             <td class="p-2 text-orange-600 font-bold border-l">${formatBsDec(accumTradEnergyCost)}</td>
             <td class="p-2 text-blue-600 font-bold border-l">${formatBsDec(accumPsaEnergyCost)}</td>
             <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">${formatBsDec(accumEnergySavings)}</td>
@@ -1881,9 +1908,9 @@
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Periodo Anual</th>
-            <th class="p-2 font-semibold border-l text-orange-600 text-center">Costo Energía Actuales (Anual)</th>
-            <th class="p-2 font-semibold border-l text-blue-600 text-center">Costo Energía PSA (Anual)</th>
-            <th class="p-2 font-semibold border-l text-emerald-600 text-center">Ahorro Energético del Año (CRE)</th>
+            <th class="p-2 font-semibold border-l text-orange-600 text-center">Dispenser Actual</th>
+            <th class="p-2 font-semibold border-l text-blue-600 text-center">Dispenser PSA</th>
+            <th class="p-2 font-semibold border-l text-emerald-600 text-center">Ahorro Energético</th>
           </tr>
         </thead>
       `;
@@ -1960,7 +1987,7 @@
       } else {
         html += `
           <tr class="bg-slate-50/80 font-black border-t border-slate-300">
-            <td colspan="5" class="p-4 text-slate-700 text-sm md:text-base uppercase tracking-wider font-extrabold text-right">Inversión Tecnológica Total Consolidada</td>
+            <td colspan="5" class="p-4 text-slate-700 text-sm md:text-base uppercase tracking-wider font-extrabold text-right">Inversión PSA - Propuesta A</td>
             <td colspan="2" class="p-4 text-right text-blue-800 text-lg md:text-xl font-black tracking-tight bg-blue-50/50 font-extrabold">
               ${formatBs(grandTotal)}
             </td>
@@ -2212,6 +2239,7 @@
 
     // --- GEMINI API: GENERACIÓN DE RESUMEN EJECUTIVO ---
     async function generateAISummary() {
+      // 1. Recolección de variables del DOM
       const bottlesPerWeek = parseFloat(document.getElementById('input-bottles-week').value) || 0;
       const bottleCost = parseFloat(document.getElementById('input-bottle-cost').value) || 0;
       const bottleCap = parseFloat(document.getElementById('input-bottle-cap').value) || 0;
@@ -2246,50 +2274,81 @@
       loader.classList.remove('hidden');
       textfield.classList.add('hidden');
 
+      // 2. Ejecutar la función de cálculo financiero que ya actualizamos
       const calc = calculateConsolidatedROI(comparativeProducts, params, db.iva.rate);
 
+      // 3. Cálculos de Energía (Mantenemos tu lógica original)
       const kwhDayTrad = (wattsTradEnergy / 1000) * activeHoursEnergy;
       const costYearTradAccum = kwhDayTrad * rateCreEnergy * qtyTradEnergy * 365;
       const energyPsaUnits = activeProducts.reduce((sum, r) => sum + (r.inEnergy ? r.quantity : 0), 0);
       const kwhDayPsa = (550 / 1000) * activeHoursEnergy;
       const costYearPsaAccum = kwhDayPsa * rateCreEnergy * energyPsaUnits * 365;
       const energySavingsYearly = costYearTradAccum - costYearPsaAccum;
+      const totalEnergySavings = energySavingsYearly * params.years;
 
-      const prompt = `Actúa como un experto asesor hídrico y financiero corporativo de ${db.company.name}. Escribe un resumen ejecutivo persuasivo de máximo 2 párrafos para el cliente, usando formato de texto plano sin markdown, sin negritas, sin viñetas y sin asteriscos.
-      Datos de la simulación consolidada a ${params.years} años:
-      - Consumo de agua en Bidones: ${params.bottlesPerWeek} bidones/semana a Bs ${params.bottleCost}. Gasto proyectado de agua: Bs ${calc.totalTradCost}.
-      - Solución PSA Propuesta: Compuesta por ${comparativeProducts.map(p => `${p.quantity} unids de ${p.product.name}`).join(', ')}.
-      - Amortización de la Solución: Inversión Bs ${calc.initialCost}, Costo Total Hídrico Bs ${calc.totalPsaCost}, Ahorro Hídrico Bs ${calc.totalSavings}, Retorno de inversión hídrica en ${calc.roiMonth} meses.
-      - Eficiencia Energética (CRE): El cliente tiene ${qtyTradEnergy} dispensadores tradicionales de ${wattsTradEnergy}W. Se propone optimizar a ${energyPsaUnits} Dispensadores PSA (550W) que requieren consumo eléctrico. Esto genera un ahorro adicional de energía eléctrica de Bs ${Number(energySavingsYearly * params.years).toFixed(2)} acumulado en los ${params.years} años.
-      
-      Estructura la conclusión uniendo el ahorro de agua y el ahorro energético de la CRE. Resalta la excelente decisión de inversión del proyecto de transición hídrica y ambiental consolidada. Sé convincente, ejecutivo y amigable.`;
+      // 4. Preparar Datos Duros para el Prompt
+      const capex = formatBs(calc.initialCost);
+      const opexAnual = formatBs(calc.opexAnualPromedio || 0);
+      const ahorroNeto = formatBs(calc.grandTotalSavings);
+      const pri = calc.paybackMonth ? `${calc.paybackMonth} meses` : 'No se recupera en el plazo evaluado';
+      const roi = calc.roiPercentage ? `${calc.roiPercentage.toFixed(0)}%` : '0%';
+      const plazo = `${params.years} años`;
+
+      // 5. Ingeniería del Prompt: Eliminamos el rol comercial y forzamos el rol CFO
+      const prompt = `Actúa como un Director Financiero (CFO) analizando una propuesta de inversión de capital (CAPEX) para la sustitución de suministro tradicional de agua por un sistema de purificación.
+
+Tu objetivo es redactar un Resumen Ejecutivo directo, frío y estrictamente basado en los siguientes datos financieros proyectados a ${plazo}:
+
+DATOS DUROS:
+- CAPEX (Inversión Inicial en Activos): ${capex}
+- OPEX Promedio Anual (Operación/Mantenimiento): ${opexAnual}
+- Ahorro Neto Total (Beneficio Líquido Hídrico): ${ahorroNeto}
+- Ahorro Energético Adicional Acumulado: Bs ${totalEnergySavings.toFixed(2)}
+- PRI (Periodo de Recuperación de Inversión): ${pri}
+- ROI (Retorno sobre Inversión): ${roi}
+
+REGLAS ESTRICTAS DE REDACCIÓN:
+1. Elimina todo lenguaje de marketing o persuasivo (prohibido usar "excelente decisión", "increíble", "innovador").
+2. Inicia evaluando directamente la viabilidad financiera del proyecto con base en el ROI y el PRI.
+3. Menciona el impacto consolidado en el flujo de caja (unificando ahorro hídrico y energético frente al CAPEX/OPEX).
+4. Máximo 2 párrafos concisos.
+5. Usa texto completamente plano (sin asteriscos de markdown, sin negritas, sin viñetas).
+6. Tono institucional, crítico y enfocado en la eficiencia del capital.`;
 
       const activeApiKey = (typeof apiKey !== 'undefined' && apiKey) ? apiKey : '';
 
+      if (!activeApiKey) {
+        showToast("Error: No se encontró la API Key. Configúrala en el código.", "error");
+        card.classList.add('hidden');
+        return;
+      }
+
       try {
+        // CORRECCIÓN CRÍTICA: Se cambió el endpoint a un modelo estable 'gemini-1.5-flash'
         const data = await fetchWithBackoff(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${activeApiKey}`,
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              systemInstruction: { parts: [{ text: "Eres un redactor persuasivo corporativo. No uses formato markdown (* o #). Usa texto limpio." }] }
+              contents: [{ parts: [{ text: prompt }] }]
             })
           }
         );
 
         const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
         if (responseText) {
           textfield.value = responseText.trim();
           loader.classList.add('hidden');
           textfield.classList.remove('hidden');
         } else {
-          showToast("No se pudo estructurar el resumen con la IA", "error");
+          showToast("Error: La IA no devolvió un formato válido.", "error");
           card.classList.add('hidden');
         }
       } catch (err) {
-        showToast("Error de comunicación con la IA", "error");
+        console.error("Fallo crítico en conexión con Gemini:", err);
+        showToast("Error de red o API Key inválida", "error");
         card.classList.add('hidden');
       }
     }
