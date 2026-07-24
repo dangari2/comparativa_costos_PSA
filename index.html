@@ -1423,7 +1423,7 @@
           </h4>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 print:border-slate-300">
-              <div class="text-slate-600 text-[10px] font-bold uppercase tracking-wider mb-1">CAPEX (Inversión Inicial)</div>
+              <div class="text-slate-600 text-[10px] font-bold uppercase tracking-wider mb-1">CAPEX</div>
               <div class="text-lg md:text-xl font-black text-slate-800">${formatBs(calc.initialCost)}</div>
             </div>
             <div class="p-4 rounded-lg border ${hasAhorro ? 'bg-emerald-50 border-emerald-100' : 'bg-red-50 border-red-100'}">
@@ -1431,11 +1431,11 @@
               <div class="text-lg md:text-xl font-black ${hasAhorro ? 'text-emerald-600' : 'text-red-500'}">${formatBs(calc.grandTotalSavings)}</div>
             </div>
             <div class="bg-violet-50 p-4 rounded-lg border border-violet-100 print:border-violet-200">
-              <div class="text-violet-600 text-[10px] font-bold uppercase tracking-wider mb-1">PRI (Payback Period)</div>
+              <div class="text-violet-600 text-[10px] font-bold uppercase tracking-wider mb-1">PRI</div>
               <div class="text-lg md:text-xl font-black text-violet-700">${calc.paybackMonth ? `${calc.paybackMonth} Meses` : 'No alcanza'}</div>
             </div>
             <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 print:border-blue-200">
-              <div class="text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-1">ROI (Retorno de Inversión)</div>
+              <div class="text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-1">ROI</div>
               <div class="text-lg md:text-xl font-black text-blue-700">${formatNum(calc.roiPercentage.toFixed(0))}%</div>
             </div>
           </div>
