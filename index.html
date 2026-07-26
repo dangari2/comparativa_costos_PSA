@@ -954,14 +954,14 @@
 
     // --- DATABASE MOCK (LOCALSTORAGE) ---
     const DEFAULT_PRODUCTS = [
-      { id: "prod_001", name: "Dispenser PSA Eco-D Empresarial", details: "Agua pura fría/caliente, purificación avanzada de alto rendimiento y flujo continuo.", image: "./FOTOS/PSA-Eco-D_Pie.png", basePrice: 12550, performance: 80000, usefulLife: 10, warranty: "2 años", maintenanceCost: 604, maintenanceFrequency: 12, installationCost: 610, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString() },
-      { id: "prod_002", name: "Purificador PSA S1000-2 SM", details: "Purificador de agua sobre mesada de alto rendimiento. Sin costo de instalación", image: "./FOTOS/Psa_S1000-2.png", basePrice: 4800, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString() },
-      { id: "prod_003", name: "Purificador PSA S1000-2 + grifería BM", details: "Purificador de agua bajo mesada de alto rendimiento. Con grifería bajo mesada", image: "./FOTOS/Psa_S1000-2.png", basePrice: 5581, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 610, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString() },
-      { id: "prod_004", name: "Purificador PSA SENIOR 4 SM", details: "Purificador de agua sobre mesada, 36000 litros de rendimiento", image: "./FOTOS/Psa_Senior4.png", basePrice: 4150, performance: 36000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 3725, renewalFrequency: 36, createdAt: new Date().toISOString() },
-      { id: "prod_005", name: "Purificador PSA SENIOR BIANCO SM", details: "Purificador de agua sobre mesada de alto rendimiento. 36000 litros", image: "./FOTOS/PSA-Senior.png", basePrice: 3295, performance: 36000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 2960, renewalFrequency: 36, createdAt: new Date().toISOString() },
-      { id: "prod_006", name: "Purificador de AIRE", details: "Alta eficiencia gracias a las 4 etapas de purificación.", image: "./FOTOS/PSA-Aire.png", basePrice: 8655, performance: 100, usefulLife: 3, warranty: "24 meses", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 635, renewalFrequency: 12, createdAt: new Date().toISOString() },
-      { id: "prod_007", name: "Purificador de Ducha PSA", details: "Agua sin cloro, trihalometanos y metales pesados para el baño. Instalación sin Costo.", image: "./FOTOS/Psa_Ducha_nueva.png", basePrice: 1515, performance: 150000, usefulLife: 3, warranty: "12 meses", maintenanceCost: 0, maintenanceFrequency: 6, installationCost: 0, renewalCost: 586, renewalFrequency: 6, createdAt: new Date().toISOString() },
-      { id: "prod_008", name: "Dispenser Genérico con nucleo PSA", details: "Disp. Genércio Agua pura fría/caliente, purificación avanzada de alto rendimiento y flujo continuo.", image: "./FOTOS/IKA.png", basePrice: 6400, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 604, maintenanceFrequency: 12, installationCost: 2500, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString() }
+      { id: "prod_001", name: "Dispenser PSA Eco-D Empresarial", details: "Agua pura fría/caliente, purificación avanzada de alto rendimiento y flujo continuo.", image: "./FOTOS/PSA-Eco-D_Pie.png", basePrice: 12550, performance: 80000, usefulLife: 10, warranty: "2 años", maintenanceCost: 604, maintenanceFrequency: 12, installationCost: 610, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 550, dutyCycle: 0.90 },
+      { id: "prod_002", name: "Purificador PSA S1000-2 SM", details: "Purificador de agua sobre mesada de alto rendimiento. Sin costo de instalación", image: "./FOTOS/Psa_S1000-2.png", basePrice: 4800, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
+      { id: "prod_003", name: "Purificador PSA S1000-2 + grifería BM", details: "Purificador de agua bajo mesada de alto rendimiento. Con grifería bajo mesada", image: "./FOTOS/Psa_S1000-2.png", basePrice: 5581, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 648, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
+      { id: "prod_004", name: "Purificador PSA SENIOR 4 SM", details: "Purificador de agua sobre mesada, 36000 litros de rendimiento", image: "./FOTOS/Psa_Senior4.png", basePrice: 4150, performance: 36000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 3725, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
+      { id: "prod_005", name: "Purificador PSA SENIOR BIANCO SM", details: "Purificador de agua sobre mesada de alto rendimiento. 36000 litros", image: "./FOTOS/PSA-Senior.png", basePrice: 3295, performance: 36000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 2960, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
+      { id: "prod_006", name: "Purificador de AIRE", details: "Alta eficiencia gracias a las 4 etapas de purificación.", image: "./FOTOS/PSA-Aire.png", basePrice: 8655, performance: 100, usefulLife: 3, warranty: "24 meses", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 635, renewalFrequency: 12, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
+      { id: "prod_007", name: "Purificador de Ducha PSA", details: "Agua sin cloro, trihalometanos y metales pesados para el baño. Instalación sin Costo.", image: "./FOTOS/Psa_Ducha_nueva.png", basePrice: 1515, performance: 150000, usefulLife: 3, warranty: "12 meses", maintenanceCost: 0, maintenanceFrequency: 6, installationCost: 0, renewalCost: 586, renewalFrequency: 6, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
+      { id: "prod_008", name: "Dispenser Genérico con nucleo PSA", details: "Disp. Genércio Agua pura fría/caliente, purificación avanzada de alto rendimiento y flujo continuo.", image: "./FOTOS/IKA.png", basePrice: 6400, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 604, maintenanceFrequency: 12, installationCost: 2500, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 600, dutyCycle: 0.90 }
     ];
 
     const DEFAULT_COMPANY = { name: "PSA Bolivia", address: "Av. San Martin - Edif. Manzana 40\nSanta Cruz de la Sierra, Bolivia", phone: "+591 75371354", email: "contacto@psabolivia.com" };
@@ -1081,6 +1081,9 @@
 
     // --- CONSOLIDATED ROI CALCULATION ENGINE ---
     function calculateConsolidatedROI(activeProducts, params, taxRate) {
+
+
+
       const { bottlesPerWeek, bottleCost, bottleCap, invoiced, years, qtyTradEnergy, wattsTradEnergy, activeHoursEnergy, rateCreEnergy } = params;
 
       const months = years * 12;
@@ -1096,7 +1099,14 @@
       // Si la bandera es falsa, el costo eléctrico para AMBOS escenarios es 0. 
       // Si es verdadera, calculamos ambos costos en base a los datos.
       const costMonthTradEnergy = hasEnergyCalc ? (((wattsTradEnergy / 1000) * activeHoursEnergy) * rateCreEnergy * qtyTradEnergy * 30.4167) : 0;
-      const costMonthPsaEnergy = hasEnergyCalc ? (((550 / 1000) * activeHoursEnergy) * rateCreEnergy * energyPsaUnits * 30.4167) : 0;
+
+      // CÁLCULO PRECISO Y SIN ERRORES DE SCOPE
+      const costMonthPsaEnergy = hasEnergyCalc ? activeProducts.reduce((sum, item) => {
+        if (!item.inEnergy || !item.product.powerConsumptionWatts) return sum;
+        const watts = item.product.powerConsumptionWatts;
+        const cicloTrabajo = item.product.dutyCycle > 0 ? item.product.dutyCycle : 0.30;
+        return sum + (((watts / 1000) * (activeHoursEnergy * cicloTrabajo)) * rateCreEnergy * item.quantity * 30.4167);
+      }, 0) : 0;
 
       let accPsaWater = 0, accTradWater = 0;
       let accPsaTotal = 0, accTradTotal = 0;
@@ -1109,6 +1119,8 @@
         return sum + itemInitial;
       }, 0);
 
+      // Acumuladores explícitos
+      let opexAcumuladoTotal = 0;
       let yearPsaWaterCost = 0, yearTradWaterCost = 0;
       let yearPsaTotalCost = 0, yearTradTotalCost = 0;
       let currentYear = 1;
@@ -1121,19 +1133,30 @@
         // Gasto Agua
         const tradMonthCostWater = bottlesPerMonth * bottleCost;
         let psaMonthCostWater = 0;
+        let psaMonthOpex = 0; // Sub-acumulador estricto de OPEX
 
-        if (m === 1) psaMonthCostWater += totalInitialCost;
+        if (m === 1) psaMonthCostWater += totalInitialCost; // Capex se suma al flujo de caja del mes 1
 
         activeProducts.forEach(item => {
           const p = item.product;
+          // 1. Mantenimiento (OPEX)
           if (m > 12 && p.maintenanceFrequency > 0 && (m - 1) % p.maintenanceFrequency === 0) {
-            psaMonthCostWater += (p.maintenanceCost * item.quantity) * taxMultiplier;
+            const costoMantenimiento = (p.maintenanceCost * item.quantity) * taxMultiplier;
+            psaMonthCostWater += costoMantenimiento;
+            psaMonthOpex += costoMantenimiento;
           }
+          // 2. Renovación (OPEX)
           if (m > 1 && p.renewalFrequency > 0 && (m - 1) % p.renewalFrequency === 0) {
-            psaMonthCostWater += (p.renewalCost * item.quantity) * taxMultiplier;
+            const costoRenovacion = (p.renewalCost * item.quantity) * taxMultiplier;
+            psaMonthCostWater += costoRenovacion;
+            psaMonthOpex += costoRenovacion;
           }
+          // LA ENERGÍA SE ELIMINÓ DE AQUÍ PARA EVITAR EL DOBLE CONTEO
         });
 
+
+        // Agregamos consumo eléctrico al OPEX mensual (será 0 si no aplica)
+        psaMonthOpex += costMonthPsaEnergy;
         simAccTradWater += tradMonthCostWater;
         simAccPsaWater += psaMonthCostWater;
 
@@ -1150,6 +1173,8 @@
         }
 
         if (m <= months) {
+          // Acumulamos el OPEX real solo durante el periodo de estudio solicitado
+          opexAcumuladoTotal += psaMonthOpex;
           accPsaWater = simAccPsaWater;
           accTradWater = simAccTradWater;
           accPsaTotal = simAccPsaTotal;
@@ -1182,6 +1207,8 @@
         }
       }
 
+
+
       const totalWaterLiters = bottlesPerWeek * 52 * years * bottleCap;
       const totalPsaCapacity = activeProducts.reduce((sum, item) => sum + (item.product.performance * item.quantity), 0);
 
@@ -1190,7 +1217,7 @@
       const capex = totalInitialCost;
 
       // 2. OPEX Total (Todo el gasto de PSA menos la inversión inicial)
-      const opexTotal = accPsaTotal - capex;
+      const opexTotal = opexAcumuladoTotal;
       const opexAnualPromedio = opexTotal / years;
 
       // 3. Ahorro Neto (Beneficio de la inversión)
@@ -1307,9 +1334,16 @@
       const kwhDayTrad = (wattsTradEnergy / 1000) * activeHoursEnergy;
       const costYearTradAccum = kwhDayTrad * rateCreEnergy * qtyTradEnergy * 365;
       const energyPsaUnits = activeProducts.reduce((sum, r) => sum + (r.inEnergy ? r.quantity : 0), 0);
-      const kwhDayPsa = (550 / 1000) * activeHoursEnergy;
-      const costYearPsaAccum = kwhDayPsa * rateCreEnergy * energyPsaUnits * 365;
-
+      const costDayPsaTotal = activeProducts.reduce((sum, r) => {
+        if (!r.inEnergy) return sum;
+        // Para renderCharts necesitas iterar sobre db.products o usar el objeto anidado dependiendo del scope
+        const p = r.product ? r.product : db.products.find(prod => prod.id === r.id);
+        if (!p || !p.powerConsumptionWatts) return sum;
+        const w = p.powerConsumptionWatts;
+        const c = p.dutyCycle > 0 ? p.dutyCycle : 0.30;
+        return sum + ((w / 1000) * (activeHoursEnergy * c) * rateCreEnergy * r.quantity);
+      }, 0);
+      const costYearPsaAccum = costDayPsaTotal * 365;
       const hasEnergyCalc = energyPsaUnits > 0;
 
       // CORRECCIÓN CRÍTICA: Si no hay cálculo de energía, el ahorro energético es 0 absoluto.
@@ -1390,7 +1424,7 @@
             <td class="p-3 text-slate-700 border-l text-center font-bold">${formatBs(calc.initialCost)}</td>
           </tr>
           <tr class="hover:bg-slate-50">
-            <td class="p-3 font-semibold text-slate-600">OPEX (Promedio Anual: Operación, Energía y Mantenimiento)</td>
+            <td class="p-3 font-semibold text-slate-600">OPEX (Promedio Anual: Operación, Mantenimiento${calc.hasEnergyCalc ? ' y Energía Eléctrica' : ''})</td>
             <td class="p-3 text-slate-400 border-l text-center">N/A</td>
             <td class="p-3 text-slate-700 border-l text-center font-bold">${formatBs(calc.opexAnualPromedio)} / año</td>
           </tr>
@@ -1648,6 +1682,21 @@
       const containerGrandTotal = document.getElementById('container-chart-grand-total');
       const containerAccumulated = document.getElementById('container-chart-accumulated'); // <- Requerido para dinámica
 
+      // Cálculos eléctricos — misma fórmula que el banner y calculateConsolidatedROI
+      const kwhDayTrad = (wattsTradEnergy / 1000) * activeHoursEnergy;
+      const costYearTradAccum = kwhDayTrad * rateCreEnergy * qtyTradEnergy * 365;
+
+      // PSA: usa powerConsumptionWatts y dutyCycle de cada producto, igual que calculateConsolidatedROI
+      const costMonthPsaEnergyForChart = calc.hasEnergyCalc
+        ? comparativeProducts.reduce((sum, r) => {
+          if (!r.inEnergy || !r.product.powerConsumptionWatts) return sum;
+          const watts = r.product.powerConsumptionWatts;
+          const ciclo = r.product.dutyCycle > 0 ? r.product.dutyCycle : 0.30;
+          return sum + (((watts / 1000) * (activeHoursEnergy * ciclo)) * rateCreEnergy * r.quantity * 30.4167);
+        }, 0)
+        : 0;
+      const costYearPsaAccum = costMonthPsaEnergyForChart * 12;
+
       if (!calc.hasEnergyCalc) {
         // 1. Ocultar los contenedores de energía
         if (containerEnergyAcc) containerEnergyAcc.classList.add('hidden');
@@ -1681,22 +1730,8 @@
         chartEnergyAccInstance = new Chart(ctxEnergyAcc, { ... });
         */
         // Dataset 4: Análisis de Eficiencia Energética (Bs. Acumulado)
-        const kwhDayTrad = (wattsTradEnergy / 1000) * activeHoursEnergy;
-        const costDayTradUnit = kwhDayTrad * rateCreEnergy;
-        const costDayTradTotal = costDayTradUnit * qtyTradEnergy;
-        const costYearTradAccum = costDayTradTotal * 365;
 
-        const activeProductsForEnergy = selectedProductsState.map(sp => {
-          const product = db.products.find(p => p.id === sp.id);
-          if (!product) return null;
-          return { quantity: sp.quantity, inEnergy: sp.inEnergy };
-        }).filter(Boolean);
 
-        const energyPsaUnits = activeProductsForEnergy.reduce((sum, r) => sum + (r.inEnergy ? r.quantity : 0), 0);
-        const kwhDayPsa = (550 / 1000) * activeHoursEnergy;
-        const costDayPsaUnit = kwhDayPsa * rateCreEnergy;
-        const costDayPsaTotal = costDayPsaUnit * energyPsaUnits;
-        const costYearPsaAccum = costDayPsaTotal * 365;
 
         const datasetsEnergy = [
           {
@@ -1789,14 +1824,15 @@
           }
         });
 
-        // RENDERIZADO DE TABLAS DE DATOS ANEXADAS BAJO LOS GRÁFICOS
-        renderChartTables(calc, comparativeProducts, years, annualTradLiters, consolidatedPsaYield, costYearTradAccum, costYearPsaAccum);
-      }
 
-      // --- TABLAS EXPLICATIVAS BAJO GRÁFICOS ---
-      function renderChartTables(calc, comparativeProducts, years, annualTradLiters, consolidatedPsaYield, costYearTradAccum, costYearPsaAccum) {
-        // 1. Tabla Acumulada Anualizada
-        let headAcc = `
+      }
+      // RENDERIZADO DE TABLAS DE DATOS ANEXADAS BAJO LOS GRÁFICOS
+      renderChartTables(calc, comparativeProducts, years, annualTradLiters, consolidatedPsaYield, costYearTradAccum, costYearPsaAccum);
+    }
+    // --- TABLAS EXPLICATIVAS BAJO GRÁFICOS ---
+    function renderChartTables(calc, comparativeProducts, years, annualTradLiters, consolidatedPsaYield, costYearTradAccum, costYearPsaAccum) {
+      // 1. Tabla Acumulada Anualizada
+      let headAcc = `
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Corte Operativo</th>
@@ -1806,10 +1842,10 @@
           </tr>
         </thead>
       `;
-        let bodyAcc = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
-        for (let y = 0; y < years; y++) {
-          const rY = calc.yearlyData[y];
-          bodyAcc += `
+      let bodyAcc = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
+      for (let y = 0; y < years; y++) {
+        const rY = calc.yearlyData[y];
+        bodyAcc += `
           <tr class="hover:bg-slate-50">
             <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1}</td>
             <td class="p-2 text-red-600 font-bold border-l">${formatBs(rY.accTrad)}</td>
@@ -1817,12 +1853,12 @@
             <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">${formatBs(rY.accTrad - rY.accPsa)}</td>
           </tr>
         `;
-        }
-        bodyAcc += "</tbody>";
-        document.getElementById('table-acc-yearly').innerHTML = headAcc + bodyAcc;
+      }
+      bodyAcc += "</tbody>";
+      document.getElementById('table-acc-yearly').innerHTML = headAcc + bodyAcc;
 
-        // 2. Tabla Inversiones, Gasto y Ahorro del Año
-        let headYear = `
+      // 2. Tabla Inversiones, Gasto y Ahorro del Año
+      let headYear = `
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Período Anual</th>
@@ -1832,10 +1868,10 @@
           </tr>
         </thead>
       `;
-        let bodyYear = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
-        for (let y = 0; y < years; y++) {
-          const rY = calc.yearlyData[y];
-          bodyYear += `
+      let bodyYear = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
+      for (let y = 0; y < years; y++) {
+        const rY = calc.yearlyData[y];
+        bodyYear += `
           <tr class="hover:bg-slate-50">
             <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1}</td>
             <td class="p-2 text-red-600 font-bold border-l">${formatBs(rY.tradYearCost)}</td>
@@ -1843,12 +1879,12 @@
             <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">${formatBs(rY.savings)}</td>
           </tr>
         `;
-        }
-        bodyYear += "</tbody>";
-        document.getElementById('table-yearly-gains').innerHTML = headYear + bodyYear;
+      }
+      bodyYear += "</tbody>";
+      document.getElementById('table-yearly-gains').innerHTML = headYear + bodyYear;
 
-        // 3. Tabla de Comparativa Hídrica Proyectada
-        let headWater = `
+      // 3. Tabla de Comparativa Hídrica Proyectada
+      let headWater = `
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
             <th class="p-2 font-semibold">Análisis de Suministro</th>
@@ -1858,12 +1894,12 @@
           </tr>
         </thead>
       `;
-        let bodyWater = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
-        for (let y = 0; y < years; y++) {
-          const cumulativeDemand = annualTradLiters * (y + 1);
-          const cumulativeYield = consolidatedPsaYield * (y + 1);
-          const surplus = cumulativeYield - cumulativeDemand;
-          bodyWater += `
+      let bodyWater = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
+      for (let y = 0; y < years; y++) {
+        const cumulativeDemand = annualTradLiters * (y + 1);
+        const cumulativeYield = consolidatedPsaYield * (y + 1);
+        const surplus = cumulativeYield - cumulativeDemand;
+        bodyWater += `
           <tr class="hover:bg-slate-50">
             <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1} </td>
             <td class="p-2 text-red-600 font-bold border-l">${formatNum(Math.round(cumulativeDemand))} L</td>
@@ -1871,67 +1907,70 @@
             <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">+${formatNum(Math.round(surplus))} L</td>
           </tr>
         `;
-        }
-        bodyWater += "</tbody>";
-        document.getElementById('table-water-comparison').innerHTML = headWater + bodyWater;
+      }
+      bodyWater += "</tbody>";
+      document.getElementById('table-water-comparison').innerHTML = headWater + bodyWater;
 
-        // 4. Tabla de Comparativa de Consumo de Energía Eléctrica Acumulada
+      // 4 y 5. Tablas de energía: solo si hay cálculo de energía activo
+      if (calc.hasEnergyCalc) {
         let headEnergy = `
-        <thead class="bg-white border-b text-slate-600 print:border-b-2">
-          <tr>
-            <th class="p-2 font-semibold">Periodo de Amortización</th>
-            <th class="p-2 font-semibold border-l text-orange-600 text-center">Dispenser Actual</th>
-            <th class="p-2 font-semibold border-l text-blue-600 text-center">Dispenser PSA</th>
-            <th class="p-2 font-semibold border-l text-emerald-600 text-center">Ahorro Energético</th>
-          </tr>
-        </thead>
-      `;
+          <thead class="bg-white border-b text-slate-600 print:border-b-2">
+            <tr>
+              <th class="p-2 font-semibold">Periodo de Amortización</th>
+              <th class="p-2 font-semibold border-l text-orange-600 text-center">Dispenser Actual</th>
+              <th class="p-2 font-semibold border-l text-blue-600 text-center">Dispenser PSA</th>
+              <th class="p-2 font-semibold border-l text-emerald-600 text-center">Ahorro Energético</th>
+            </tr>
+          </thead>
+        `;
         let bodyEnergy = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
         for (let y = 0; y < years; y++) {
           const accumTradEnergyCost = costYearTradAccum * (y + 1);
           const accumPsaEnergyCost = costYearPsaAccum * (y + 1);
           const accumEnergySavings = accumTradEnergyCost - accumPsaEnergyCost;
           bodyEnergy += `
-          <tr class="hover:bg-slate-50">
-            <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1} </td>
-            <td class="p-2 text-orange-600 font-bold border-l">${formatBsDec(accumTradEnergyCost)}</td>
-            <td class="p-2 text-blue-600 font-bold border-l">${formatBsDec(accumPsaEnergyCost)}</td>
-            <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">${formatBsDec(accumEnergySavings)}</td>
-          </tr>
-        `;
+            <tr class="hover:bg-slate-50">
+              <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1} </td>
+              <td class="p-2 text-orange-600 font-bold border-l">${formatBsDec(accumTradEnergyCost)}</td>
+              <td class="p-2 text-blue-600 font-bold border-l">${formatBsDec(accumPsaEnergyCost)}</td>
+              <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">${formatBsDec(accumEnergySavings)}</td>
+            </tr>
+          `;
         }
         bodyEnergy += "</tbody>";
         document.getElementById('table-energy-comparison').innerHTML = headEnergy + bodyEnergy;
 
         // 5. Tabla de Comparativa de Consumo de Energía Eléctrica Anualizada
         let headEnergyYearly = `
-        <thead class="bg-white border-b text-slate-600 print:border-b-2">
-          <tr>
-            <th class="p-2 font-semibold">Periodo Anual</th>
-            <th class="p-2 font-semibold border-l text-orange-600 text-center">Dispenser Actual</th>
-            <th class="p-2 font-semibold border-l text-blue-600 text-center">Dispenser PSA</th>
-            <th class="p-2 font-semibold border-l text-emerald-600 text-center">Ahorro Energético</th>
-          </tr>
-        </thead>
-      `;
+          <thead class="bg-white border-b text-slate-600 print:border-b-2">
+            <tr>
+              <th class="p-2 font-semibold">Periodo Anual</th>
+              <th class="p-2 font-semibold border-l text-orange-600 text-center">Dispenser Actual</th>
+              <th class="p-2 font-semibold border-l text-blue-600 text-center">Dispenser PSA</th>
+              <th class="p-2 font-semibold border-l text-emerald-600 text-center">Ahorro Energético</th>
+            </tr>
+          </thead>
+        `;
         let bodyEnergyYearly = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
         for (let y = 0; y < years; y++) {
-          const annualTradEnergyCost = costYearTradAccum;
-          const annualPsaEnergyCost = costYearPsaAccum;
-          const annualEnergySavings = annualTradEnergyCost - annualPsaEnergyCost;
           bodyEnergyYearly += `
-          <tr class="hover:bg-slate-50">
-            <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1}</td>
-            <td class="p-2 text-orange-600 font-bold border-l">${formatBsDec(annualTradEnergyCost)}</td>
-            <td class="p-2 text-blue-600 font-bold border-l">${formatBsDec(annualPsaEnergyCost)}</td>
-            <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">${formatBsDec(annualEnergySavings)}</td>
-          </tr>
-        `;
+            <tr class="hover:bg-slate-50">
+              <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1}</td>
+              <td class="p-2 text-orange-600 font-bold border-l">${formatBsDec(costYearTradAccum)}</td>
+              <td class="p-2 text-blue-600 font-bold border-l">${formatBsDec(costYearPsaAccum)}</td>
+              <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">${formatBsDec(costYearTradAccum - costYearPsaAccum)}</td>
+            </tr>
+          `;
         }
         bodyEnergyYearly += "</tbody>";
         document.getElementById('table-energy-yearly-comparison').innerHTML = headEnergyYearly + bodyEnergyYearly;
+      } else {
+        // Limpiar tablas de energía cuando no aplica
+        document.getElementById('table-energy-comparison').innerHTML = '';
+        document.getElementById('table-energy-yearly-comparison').innerHTML = '';
       }
-    }
+    } // fin de renderChartTables
+
 
 
     // --- RENDER DE TABLA PROFORMA / COTIZACIÓN DETALLADA (MODIFICADA) ---
@@ -2831,6 +2870,13 @@ REGLAS ESTRICTAS DE REDACCIÓN:
       renderProductSelectorList();
       triggerRecalculation();
     }
+    // --- INICIALIZACIÓN DE LA APLICACIÓN ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // Forzar la creación de la interfaz inicial con el estado por defecto
+      triggerRecalculation();
+
+
+    });
   </script>
 </body>
 
