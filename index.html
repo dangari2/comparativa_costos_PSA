@@ -1456,21 +1456,21 @@
             Análisis de Rentabilidad Financiera (${totalUnits} Equipos PSA)
           </h4>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 print:border-slate-300">
-              <div class="text-slate-600 text-[10px] font-bold uppercase tracking-wider mb-1">CAPEX</div>
-              <div class="text-lg md:text-xl font-black text-slate-800">${formatBs(calc.initialCost)}</div>
+            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 print:border-slate-300 flex flex-col items-center justify-center text-center">
+              <div class="text-slate-600 text-xs font-black uppercase tracking-wider mb-2">CAPEX</div>
+              <div class="text-xl md:text-2xl font-black text-slate-800">${formatBs(calc.initialCost)}</div>
             </div>
-            <div class="p-4 rounded-lg border ${hasAhorro ? 'bg-emerald-50 border-emerald-100' : 'bg-red-50 border-red-100'}">
-              <div class="text-[10px] font-bold uppercase tracking-wider mb-1 ${hasAhorro ? 'text-emerald-700' : 'text-red-600'}">Ahorro Neto Generado</div>
-              <div class="text-lg md:text-xl font-black ${hasAhorro ? 'text-emerald-600' : 'text-red-500'}">${formatBs(calc.grandTotalSavings)}</div>
+            <div class="p-4 rounded-lg border flex flex-col items-center justify-center text-center ${hasAhorro ? 'bg-emerald-50 border-emerald-100' : 'bg-red-50 border-red-100'}">
+              <div class="text-xs font-black uppercase tracking-wider mb-2 ${hasAhorro ? 'text-emerald-700' : 'text-red-600'}">Ahorro Generado</div>
+              <div class="text-xl md:text-2xl font-black ${hasAhorro ? 'text-emerald-600' : 'text-red-500'}">${formatBs(calc.grandTotalSavings)}</div>
             </div>
-            <div class="bg-violet-50 p-4 rounded-lg border border-violet-100 print:border-violet-200">
-              <div class="text-violet-600 text-[10px] font-bold uppercase tracking-wider mb-1">PRI</div>
-              <div class="text-lg md:text-xl font-black text-violet-700">${calc.paybackMonth ? `${calc.paybackMonth} Meses` : 'No alcanza'}</div>
+            <div class="bg-violet-50 p-4 rounded-lg border border-violet-100 print:border-violet-200 flex flex-col items-center justify-center text-center">
+              <div class="text-violet-600 text-xs font-black uppercase tracking-wider mb-2">PRI</div>
+              <div class="text-xl md:text-2xl font-black text-violet-700">${calc.paybackMonth ? `${calc.paybackMonth} Meses` : 'No alcanza'}</div>
             </div>
-            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 print:border-blue-200">
-              <div class="text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-1">ROI</div>
-              <div class="text-lg md:text-xl font-black text-blue-700">${formatNum(calc.roiPercentage.toFixed(0))}%</div>
+            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 print:border-blue-200 flex flex-col items-center justify-center text-center">
+              <div class="text-blue-600 text-xs font-black uppercase tracking-wider mb-2">ROI</div>
+              <div class="text-xl md:text-2xl font-black text-blue-700">${formatNum(calc.roiPercentage.toFixed(0))}%</div>
             </div>
           </div>
         </div>
@@ -1883,28 +1883,26 @@
       bodyYear += "</tbody>";
       document.getElementById('table-yearly-gains').innerHTML = headYear + bodyYear;
 
-      // 3. Tabla de Comparativa Hídrica Proyectada
+      // 3. Tabla de Comparativa Hídrica Proyectada (valores ANUALES, igual que el gráfico)
       let headWater = `
         <thead class="bg-white border-b text-slate-600 print:border-b-2">
           <tr>
-            <th class="p-2 font-semibold">Análisis de Suministro</th>
-            <th class="p-2 font-semibold border-l text-red-600 text-center">Agua en Bidones</th>
-            <th class="p-2 font-semibold border-l text-blue-600 text-center">Agua PSA</th>
-            <th class="p-2 font-semibold border-l text-emerald-600 text-center">Superávit Hídrico Acumulado</th>
+            <th class="p-2 font-semibold">Año</th>
+            <th class="p-2 font-semibold border-l text-red-600 text-center">Agua en Bidones (Anual)</th>
+            <th class="p-2 font-semibold border-l text-blue-600 text-center">Agua PSA (Anual)</th>
+            <th class="p-2 font-semibold border-l text-emerald-600 text-center">Superávit Hídrico Anual</th>
           </tr>
         </thead>
       `;
       let bodyWater = "<tbody class='divide-y divide-slate-100 text-center text-xs md:text-sm'>";
+      const annualSurplus = consolidatedPsaYield - annualTradLiters;
       for (let y = 0; y < years; y++) {
-        const cumulativeDemand = annualTradLiters * (y + 1);
-        const cumulativeYield = consolidatedPsaYield * (y + 1);
-        const surplus = cumulativeYield - cumulativeDemand;
         bodyWater += `
           <tr class="hover:bg-slate-50">
-            <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1} </td>
-            <td class="p-2 text-red-600 font-bold border-l">${formatNum(Math.round(cumulativeDemand))} L</td>
-            <td class="p-2 text-blue-600 font-bold border-l">${formatNum(Math.round(cumulativeYield))} L</td>
-            <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">+${formatNum(Math.round(surplus))} L</td>
+            <td class="p-2 font-semibold text-slate-500 text-left">Año ${y + 1}</td>
+            <td class="p-2 text-red-600 font-bold border-l">${formatNum(Math.round(annualTradLiters))} L</td>
+            <td class="p-2 text-blue-600 font-bold border-l">${formatNum(Math.round(consolidatedPsaYield))} L</td>
+            <td class="p-2 text-emerald-600 font-black border-l bg-emerald-50/20">+${formatNum(Math.round(annualSurplus))} L</td>
           </tr>
         `;
       }
