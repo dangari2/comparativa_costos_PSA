@@ -218,8 +218,9 @@
 
     <!-- SECCIÓN: SIMULADOR -->
     <section id="view-simulator" class="flex flex-col lg:flex-row gap-6 print:block">
-      <!-- Barra lateral de parámetros flotante (Oculta al imprimir) -->
-      <aside class="w-full lg:w-1/3 space-y-6 no-print lg:sticky lg:top-6 lg:self-start lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto">
+      <!-- Barra lateral de parámetros (Oculta al imprimir) -->
+      <aside
+        class="w-full lg:w-1/3 space-y-6 no-print lg:sticky lg:top-6 lg:self-start lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto">
 
         <!-- Acciones Rápidas -->
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col gap-3">
@@ -310,8 +311,7 @@
             </div>
             <div class="p-3 bg-blue-50/50 border border-blue-100 rounded-lg text-xs text-slate-600">
               <span class="font-bold text-blue-700 block mb-1">Cálculo de Propuesta Eléctrica PSA:</span>
-              La potencia nominal del dispenser se calcula bajo un estándar estricto de <span
-                class="font-bold">550W</span>, aplicando el cálculo solo sobre los equipos que tengan activado el check
+              La potencia se toma del valor configurado en cada producto, aplicando el cálculo solo sobre los equipos que tengan activado el check de energía. El resultado final se proyecta a la tarifa de energía configurada, para estimar el gasto anual
               de energía (<i data-lucide="zap" class="inline w-3 h-3 text-amber-500"></i>).
             </div>
           </div>
@@ -548,7 +548,7 @@
           <div
             class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 print:shadow-none print:border-slate-300 break-inside-avoid force-page-break">
             <h3 class="font-bold text-base md:text-lg text-slate-800 mb-6 border-b pb-2 flex items-center gap-2">
-              <i data-lucide="receipt" class="w-5 h-5 text-blue-600"></i> Propuesta A. Cotización Unitaria
+              <i data-lucide="receipt" class="w-5 h-5 text-blue-600"></i> Propuesta A. Cotización
             </h3>
             <div class="overflow-x-auto">
               <table class="w-full text-xs md:text-sm text-left">
@@ -955,16 +955,15 @@
     // --- DATABASE MOCK (LOCALSTORAGE) ---
     const DEFAULT_PRODUCTS = [
       { id: "prod_001", name: "Dispenser PSA Eco-D Empresarial", details: "Agua pura fría/caliente, purificación avanzada de alto rendimiento y flujo continuo.", image: "./FOTOS/PSA-Eco-D_Pie.png", basePrice: 12550, performance: 80000, usefulLife: 10, warranty: "2 años", maintenanceCost: 604, maintenanceFrequency: 12, installationCost: 610, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 550, dutyCycle: 0.90 },
-      { id: "prod_002", name: "Purificador PSA S1000-2 SM", details: "Purificador de agua sobre mesada de alto rendimiento.", image: "./FOTOS/Psa_S1000-2.png", basePrice: 4800, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
+      { id: "prod_002", name: "Purificador PSA S1000-2 SM", details: "Purificador de agua sobre mesada de alto rendimiento. Sin costo de instalación", image: "./FOTOS/Psa_S1000-2.png", basePrice: 4800, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
       { id: "prod_003", name: "Purificador PSA S1000-2 + Grifería BM", details: "Purificador de agua bajo mesada de alto rendimiento. Con grifería bajo mesada", image: "./FOTOS/Psa_S1000-2.png", basePrice: 5581, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 648, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
       { id: "prod_004", name: "Purificador PSA SENIOR 4 SM", details: "Purificador de agua sobre mesada, 36000 litros de rendimiento", image: "./FOTOS/Psa_Senior4.png", basePrice: 4150, performance: 36000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 3725, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
-      { id: "prod_005", name: "Purificador PSA SENIOR 4 + Grifería BM", details: "Purificador de agua Bajo Mesada, 36000 litros de rendimiento", image: "./FOTOS/PSA_SENIOR4_BM.png", basePrice: 4931, performance: 36000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 3725, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
+      { id: "prod_005", name: "Purificador PSA SENIOR 4 + Grifería BM", details: "Purificador de agua sobre mesada, 36000 litros de rendimiento", image: "./FOTOS/PSA_SENIOR$_BM.jpg", basePrice: 4931, performance: 36000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 3725, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
       { id: "prod_006", name: "Purificador PSA SENIOR BIANCO SM", details: "Purificador de agua sobre mesada de alto rendimiento. 36000 litros", image: "./FOTOS/PSA-Senior.png", basePrice: 3295, performance: 36000, usefulLife: 3, warranty: "3 años", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 2960, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
       { id: "prod_007", name: "Purificador de AIRE", details: "Alta eficiencia gracias a las 4 etapas de purificación.", image: "./FOTOS/PSA-Aire.png", basePrice: 8655, performance: 100, usefulLife: 3, warranty: "24 meses", maintenanceCost: 0, maintenanceFrequency: 12, installationCost: 0, renewalCost: 635, renewalFrequency: 12, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
       { id: "prod_008", name: "Purificador de Ducha PSA", details: "Agua sin cloro, trihalometanos y metales pesados para el baño. Instalación sin Costo.", image: "./FOTOS/Psa_Ducha_nueva.png", basePrice: 1515, performance: 150000, usefulLife: 3, warranty: "12 meses", maintenanceCost: 0, maintenanceFrequency: 6, installationCost: 0, renewalCost: 586, renewalFrequency: 6, createdAt: new Date().toISOString(), powerConsumptionWatts: 0, dutyCycle: 0 },
       { id: "prod_009", name: "Dispenser Genérico con nucleo PSA", details: "Disp. Genércio Agua pura fría/caliente, purificación avanzada de alto rendimiento y flujo continuo.", image: "./FOTOS/IKA.png", basePrice: 6400, performance: 80000, usefulLife: 3, warranty: "3 años", maintenanceCost: 604, maintenanceFrequency: 12, installationCost: 2500, renewalCost: 4315, renewalFrequency: 36, createdAt: new Date().toISOString(), powerConsumptionWatts: 600, dutyCycle: 0.90 }
     ];
-
 
     const DEFAULT_COMPANY = { name: "PSA Bolivia", address: "Av. San Martin - Edif. Manzana 40\nSanta Cruz de la Sierra, Bolivia", phone: "+591 75371354", email: "contacto@psabolivia.com" };
     const DEFAULT_ADVISOR = { name: "Daniel Garcia", dip: "20000038", signatureTitle: "Asesor en Purificación de Agua y Aire" };
@@ -1331,31 +1330,22 @@
         return;
       }
 
-      const { years, qtyTradEnergy, wattsTradEnergy, activeHoursEnergy, rateCreEnergy } = params;
+const { years } = params;
 
-      const kwhDayTrad = (wattsTradEnergy / 1000) * activeHoursEnergy;
-      const costYearTradAccum = kwhDayTrad * rateCreEnergy * qtyTradEnergy * 365;
-      const energyPsaUnits = activeProducts.reduce((sum, r) => sum + (r.inEnergy ? r.quantity : 0), 0);
-      const costDayPsaTotal = activeProducts.reduce((sum, r) => {
-        if (!r.inEnergy) return sum;
-        // Para renderCharts necesitas iterar sobre db.products o usar el objeto anidado dependiendo del scope
-        const p = r.product ? r.product : db.products.find(prod => prod.id === r.id);
-        if (!p || !p.powerConsumptionWatts) return sum;
-        const w = p.powerConsumptionWatts;
-        const c = p.dutyCycle > 0 ? p.dutyCycle : 0.30;
-        return sum + ((w / 1000) * (activeHoursEnergy * c) * rateCreEnergy * r.quantity);
-      }, 0);
-      const costYearPsaAccum = costDayPsaTotal * 365;
-      const hasEnergyCalc = energyPsaUnits > 0;
-
-      // CORRECCIÓN CRÍTICA: Si no hay cálculo de energía, el ahorro energético es 0 absoluto.
-      const totalEnergySavingsAccumulated = hasEnergyCalc ? (costYearTradAccum - costYearPsaAccum) * years : 0;
+      // Usar directamente los valores del motor — fuente única de verdad
+      const grandTotalSavings = calc.grandTotalSavings;
       const totalWaterSavings = calc.totalSavings;
-      const grandTotalSavings = totalWaterSavings + totalEnergySavingsAccumulated;
+      const totalEnergySavingsAccumulated = calc.hasEnergyCalc
+        ? grandTotalSavings - totalWaterSavings
+        : 0;
 
-      // Renderizado dinámico de textos y etiquetas
-      const textContext = hasEnergyCalc ? `Proyección a ${years} años (Agua + Energía Electrica)` : `Proyección a ${years} años (Solo Agua)`;
-      const energyBadge = hasEnergyCalc ? `<span class="bg-black/20 px-2 py-0.5 rounded">⚡ Energía: ${formatBs(totalEnergySavingsAccumulated)}</span>` : '';
+      const textContext = calc.hasEnergyCalc
+        ? `Proyección a ${years} años (Agua + Energía Eléctrica)`
+        : `Proyección a ${years} años (Solo Agua)`;
+      const energyBadge = calc.hasEnergyCalc
+        ? `<span class="bg-black/20 px-2 py-0.5 rounded">⚡ Energía: ${formatBs(totalEnergySavingsAccumulated)}</span>`
+        : '';
+      
 
       area.innerHTML = `
     <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-xl p-6 text-white shadow-md mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -1459,19 +1449,19 @@
           </h4>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 print:border-slate-300 flex flex-col items-center justify-center text-center">
-              <div class="text-slate-600 text-xs font-black uppercase tracking-wider mb-2">CAPEX</div>
+              <div class="text-slate-600 text-base  font-black uppercase tracking-wider mb-2">CAPEX</div>
               <div class="text-xl md:text-2xl font-black text-slate-800">${formatBs(calc.initialCost)}</div>
             </div>
             <div class="p-4 rounded-lg border flex flex-col items-center justify-center text-center ${hasAhorro ? 'bg-emerald-50 border-emerald-100' : 'bg-red-50 border-red-100'}">
-              <div class="text-xs font-black uppercase tracking-wider mb-2 ${hasAhorro ? 'text-emerald-700' : 'text-red-600'}">Ahorro Generado</div>
+              <div class="text-base font-black uppercase tracking-wider mb-2 ${hasAhorro ? 'text-emerald-700' : 'text-red-600'}">Ahorro Generado</div>
               <div class="text-xl md:text-2xl font-black ${hasAhorro ? 'text-emerald-600' : 'text-red-500'}">${formatBs(calc.grandTotalSavings)}</div>
             </div>
             <div class="bg-violet-50 p-4 rounded-lg border border-violet-100 print:border-violet-200 flex flex-col items-center justify-center text-center">
-              <div class="text-violet-600 text-xs font-black uppercase tracking-wider mb-2">PRI</div>
+              <div class="text-violet-600 text-base font-black uppercase tracking-wider mb-2">PRI</div>
               <div class="text-xl md:text-2xl font-black text-violet-700">${calc.paybackMonth ? `${calc.paybackMonth} Meses` : 'No alcanza'}</div>
             </div>
             <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 print:border-blue-200 flex flex-col items-center justify-center text-center">
-              <div class="text-blue-600 text-xs font-black uppercase tracking-wider mb-2">ROI</div>
+              <div class="text-blue-600 text-base font-black uppercase tracking-wider mb-2">ROI</div>
               <div class="text-xl md:text-2xl font-black text-blue-700">${formatNum(calc.roiPercentage.toFixed(0))}%</div>
             </div>
           </div>
@@ -1528,7 +1518,7 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } }, padding: 20 },
             tooltip: { callbacks: { label: (context) => ` ${context.dataset.label}: ${formatBs(context.raw)}` } }
           },
           scales: {
@@ -1582,7 +1572,7 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } }, padding: 20 },
             tooltip: { callbacks: { label: (context) => ` ${context.dataset.label}: ${formatBs(context.raw)}` } }
           },
           scales: {
@@ -1777,7 +1767,7 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 }, padding: 20 } },
               tooltip: { callbacks: { label: (context) => ` ${context.dataset.label}: ${formatBsDec(context.raw)}` } }
             },
             scales: {
@@ -1817,7 +1807,7 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 }, padding: 20 } },
               tooltip: { callbacks: { label: (context) => ` ${context.dataset.label}: ${formatBsDec(context.raw)}` } }
             },
             scales: {
